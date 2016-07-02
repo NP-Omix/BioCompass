@@ -1,12 +1,11 @@
-from __future__ import division
+from collections import defaultdict
 from sys import argv
 import pandas as pd
 import re
 import string
-import collections
-from collections import Counter
 import numpy as np
 from sklearn.cluster import DBSCAN
+from collections import Counter
 
 script, strain_name = argv
 
@@ -32,9 +31,9 @@ def score_match(table, index_gene1, index_gene2):
     if gene1_best_BGC != 'None' and gene2_best_BGC != 'None':
         if gene1_best_BGC == gene2_best_BGC:
             score = score + 2
-            gene1_best_hit_pos = re.search(r'^(\S*)_(\d*)',table1_df.best_hit_gene.loc[index_gene1])
-            gene2_best_hit_pos = re.search(r'^(\S*)_(\d*)',table1_df.best_hit_gene.loc[index_gene2])
-            dif_best_hit_pos = abs(abs((int(gene2_best_hit_pos.group(2)) - int(gene1_best_hit_pos.group(2)))) - abs((index_gene2-index_gene1)))
+            gene1_best_hit_pos = re.search(r'^\D*([0-9]*)',table1_df.best_hit_gene_loc.loc[index_gene1])
+            gene2_best_hit_pos = re.search(r'^\D*([0-9]*)',table1_df.best_hit_gene_loc.loc[index_gene2])
+            dif_best_hit_pos = abs(abs((int(gene2_best_hit_pos.group(1)) - int(gene1_best_hit_pos.group(1)))) - abs((index_gene2-index_gene1)))
             if dif_best_hit_pos == 0:
                 score = score + 3
             elif dif_best_hit_pos == 1:
@@ -56,49 +55,6 @@ for index,row in table1_df.iterrows():
 
 #This second portion will run dbscan to create a subclusters possibilities
 
-def starter_line(i):
-    col1.append(strain_name)
-    col2.append(string.ascii_uppercase[0])
-    col3.append(1)
-    col4.append(table1_df.start.loc[i])
-    
-def continuing(i):
-    col3[len(col3)-1] = col3[len(col3)-1] + 1
-    categories.append(table1_df.category.loc[i])
-    
-    
-def find_category(categories,colpre6):
-    if 'biosynthetic' in categories:
-        colpre6.append('biosynthetic')
-    else:
-        if len(categories) > 1:
-            category = re.search(r'^\[\(\'(\S*)\'',str(Counter(categories).most_common(1))).group(1)
-            colpre6.append('%s'%category)
-        else:
-            colpre6.append('%s'%categories[0])
-
-def new_subcluster(i):
-    col1.append(strain_name)
-    if len(col2) < 26:
-        col2.append(string.ascii_uppercase[len(col2)])
-    else:
-        col2.append('A%s'%string.ascii_uppercase[len(col2)-26])
-    col3.append(1)
-    col4.append(table1_df.start.loc[i])
-    col5.append(table1_df.stop.loc[i-1])
-    find_category(categories,colpre6) 
-
-def col6_gen(colpre6):
-    seen = collections.defaultdict(list)
-    for item in colpre6:
-        if item not in seen:
-            seen[item] = 1
-            col6.append(item+"_%d"%seen[item])
-        else:
-            m = seen[item]
-            seen[item] = m + 1
-            col6.append(item+"_%d"%seen[item])
-
 def repeated(db_arrays,db):
     for i in range(0,len(db_arrays)-1):
         if np.array_equal(db_arrays[i],db) == False:
@@ -107,63 +63,53 @@ def repeated(db_arrays,db):
             return True
             break
 
-count = 0
+def parse_db(db):
+    D = defaultdict(list)
+    for i,item in enumerate(db):
+        D[item].append(i)
+    D = {k:v for k,v in D.items() if len(v)>1}
+    return D
 
-for index in range(1,len(A)):
-    db = DBSCAN(eps=index, min_samples=2).fit_predict(A)
-    if index == 1:
+def find_category(categories,col5):
+    if 'biosynthetic' in categories:
+        col5.append('biosynthetic')
+    else:
+        if len(categories) > 1:
+            category = re.search(r'^\[\(\'(\S*)\'',str(Counter(categories).most_common(1))).group(1)
+            col5.append('%s'%category)
+        else:
+            col5.append('%s'%categories[0])
+    
+count = 0
+    
+for itn in range(1,len(A)):
+    db = DBSCAN(eps=itn, min_samples=2).fit_predict(A)
+    if itn == 1:
         db_arrays = np.vstack([db])
     else:
         db_arrays = np.vstack([db_arrays,db])
     if repeated(db_arrays,db) == True:
         continue
     else:
+        subcluster_dict = parse_db(db)
         col1 = []
         col2 = []
         col3 = []
         col4 = []
         col5 = []
-        colpre6 = []
-        col6 = []
-        for i in range(0,len(table1_df)):
-            if i == 0:
-                starter_line(1)
-                categories = []
-                categories.append(table1_df.category.loc[i])
-            if i > 0 and i < len(table1_df)-1:
-                if db[i] == db[i-1]:
-                    continuing(i)
-                else:
-                    if db[i-1] == db[i+1] and table1_df.category.loc[i] != 'biosynthetic':
-                        continuing(i)
-                    elif db[i-2] == db[i]:
-                        continuing(i)
-                    else:
-                        new_subcluster(i)
-                        categories = []
-                        categories.append(table1_df.category.loc[i])
-            if i == len(table1_df)-1:
-                if db[i] == db[i-1]:
-                    col3[len(col3)-1] = col3[len(col3)-1] + 1
-                    col5.append(table1_df.stop.loc[i])
-                    categories.append(table1_df.category.loc[i])
-                    find_category(categories,colpre6)
-                else:
-                    if db[i-2] == db[i]:
-                        col3[len(col3)-1] = col3[len(col3)-1] + 1
-                        col5.append(table1_df.stop.loc[i-1]) 
-                        categories.append(table1_df.category.loc[i])
-                        find_category(categories,colpre6)
-                    elif table1_df.category.loc[i] == 'hypothetical':
-                        col3[len(col3)-1] = col3[len(col3)-1] + 1
-                        col5.append(table1_df.stop.loc[i-1])
-                        find_category(categories,colpre6)
-                    else:
-                        new_subcluster(i)
-                        col5.append(table1_df.stop.loc[i])
-                        colpre6.append(table1_df.category.loc[i])
-        col6_gen(colpre6)
-        frames = {'BGC':col1, 'subcluster':col2, 'CDSs':col3, 'start':col4, 'stop':col5, 'category':col6}
+        for key, value in subcluster_dict.iteritems():
+            col1.append(strain_name)
+            col2.append(string.ascii_uppercase[subcluster_dict.keys().index(key)])
+            col3.append(len(value))
+            categories = []
+            genes = []
+            for item in value:
+                categories.append(table1_df.category.loc[item])
+                genes.append(table1_df.locus_tag.loc[item])
+            genes = ','.join(genes)
+            col4.append(genes)
+            find_category(categories,col5)
+        frames = {'BGC':col1, 'subcluster':col2, 'CDSs':col3, 'loci':col4, 'category':col5}
         count = count + 1
         table2_df = pd.DataFrame(frames, index=None)
         table2_df.to_csv('%s_table2_%d.csv' % (strain_name,count), sep='\t', index=False)

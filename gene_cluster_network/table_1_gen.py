@@ -38,7 +38,6 @@ table1_handle = open('%s_table1.csv' % strain_name, "w")
 table1_df.to_csv(table1_handle, sep='\t', index=False)
 table1_handle.close()
 
-gb_record.name = '%s' % strain_name
 gb_record.id = '%s' % strain_name
 
 output_handle = open("%s.gbk"%strain_name, "w")

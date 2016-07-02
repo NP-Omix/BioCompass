@@ -54,7 +54,11 @@ for item in hits_list:
                 col2.append(feature.qualifiers['product'])
                 col3.append('%s'%n.group(1))
                 col4.append(gb_record.description)
-                col5.append(len(table_1))
+                CDSs = []
+                for feature in gb_record.features:
+                    if feature.type == 'CDS':
+                        CDSs.append(feature)
+                col5.append(len(CDSs))
                 col6.append(len(gb_record.seq))
                 GC_cont = GC(str(gb_record.seq))
                 col7.append(round(GC_cont,2))

@@ -10,8 +10,8 @@ edges_final = pd.read_csv('%s_edges_best_itineration.txt'%strain_name, sep='\t')
 while True:
     try:
         per_genes = int(raw_input("\n What minimum percentage of matching genes would you like [from 0 to 100]? "))
-        blast_score = int(raw_input("\n What minimum cumulative BLAST score would you like [from 1 to %s]? "%edges_final.BLAST_score.max()))
-        mgb_score = int(raw_input("\n What minimum multigeneBLAST score [from 1 to %s]? "%edges_final.MultiGeneBlast_score.max()))
+        blast_score = int(raw_input("\n What minimum cumulative BLAST score would you like [from %s to %s]? "%(edges_final.BLAST_score.min(),edges_final.BLAST_score.max())))
+        mgb_score = int(raw_input("\n What minimum multigeneBLAST score [from %s to %s]? "%(edges_final.MultiGeneBlast_score.min(),edges_final.MultiGeneBlast_score.max())))
         break
     except ValueError:
         print("Sorry, I didn't understand that. Try again using INTERGERS ONLY.")

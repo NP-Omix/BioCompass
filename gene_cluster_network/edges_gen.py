@@ -23,7 +23,7 @@ for index, row in table2_df.iterrows():
     if os.path.isfile(file_name):
         with open(file_name).xreadlines() as f:
             for line in f:
-                hit = re.search(r'^(\d*). (\S*)_\d$',line)
+                hit = re.search(r'^(\d*). (\S*)_(\S*)$',line)
                 matching_genes = re.search(r'^Number of proteins with BLAST hits to this cluster: (\d*)$', line)
                 mgb_score = re.search(r'^MultiGeneBlast score: (\d*).(\d*)$', line)
                 blast_score = re.search(r'^Cumulative Blast bit score: (\d*)$',line)
