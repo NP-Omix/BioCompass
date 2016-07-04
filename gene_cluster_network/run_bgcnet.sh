@@ -12,74 +12,9 @@ num=`cat clusters.txt | wc -l`
 
 rm clusters.txt
 
-# B. Building table 1
+#if [ -d ../outputs/ ]; then rm -r ../outputs/; mkdir ../outputs/; else mkdir ../outputs/; fi
 
-if [ $num -gt 9 ];
-        then
-			for i in {1..9}
-			do
-			    python ./table_1_gen.py ../antiSMASH_input/$1/*cluster00${i}.gbk $1_00${i}
-			    python ./category_gen.py $1_00${i}
-			done
-			for i in $(seq 10 $num);
-			do
-			    python ./table_1_gen.py ../antiSMASH_input/$1/*cluster0${i}.gbk $1_0${i}
-			    python ./category_gen.py $1_0${i}
-			done
-		else
-			for i in $(seq 1 $num);
-			do
-			    python ./table_1_gen.py ../antiSMASH_input/$1/*cluster00${i}.gbk $1_00${i}
-			    python ./category_gen.py $1_00${i}
-			done
-fi
-
-if [ -d ../outputs/ ]; then rm -r ../outputs/; mkdir ../outputs/; else mkdir ../outputs/; fi
-
-if [ -d ../outputs/tables/ ]; then rm -r ../outputs/tables/; mkdir ../outputs/tables/; mv $1_* ../outputs/tables/; else mkdir ../outputs/tables/; mv $1_* ../outputs/tables/; fi
-
-# C. Extending table_1 with best hits
-
-if [ $num -gt 9 ];
-        then
-			for i in {1..9}
-			do
-			    python ../bin/table_1_extender.py $1 00${i}
-			done
-			for i in $(seq 10 $num);
-			do
-			    python ../bin/table_1_extender.py $1 0${i}
-			done
-		else
-			for i in $(seq 1 $num);
-			do
-			    python ../bin/table_1_extender.py $1 00${i}
-			done
-fi
-
-rm temp.txt
-
-# D. Creating distance matrixes and running DBScan for subcluster divisions (table 2):
-
-cd ../outputs/tables
-
-if [ $num -gt 9 ];
-        then
-			for i in {1..9}
-			do
-			    python ../../bin/subcluster_gen.py $1_00${i}
-			done
-			for i in $(seq 10 $num);
-			do
-			    python ../../bin/subcluster_gen.py $1_0${i}
-			done
-
-		else
-			for i in $(seq 1 $num);
-			do
-			    python ../../bin/subcluster_gen.py $1_00${i}
-			done
-fi
+#if [ -d ../outputs/tables/ ]; then rm -r ../outputs/tables/; mkdir ../outputs/tables/; mv $1_* ../outputs/tables/; else mkdir ../outputs/tables/; mv $1_* ../outputs/tables/; fi
 
 # E. Creating multigeneBLAST database:
 
