@@ -1,4 +1,7 @@
 
+import re
+
+
 def parse_antiSMASH(content):
     rule = r"""
         ^
