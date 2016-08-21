@@ -42,7 +42,7 @@ def parse_antiSMASH(content):
           $
     """
 
-    parsed = re.search(rule, txt, re.VERBOSE).groupdict()
+    parsed = re.search(rule, content, re.VERBOSE).groupdict()
 
     output = {}
 
