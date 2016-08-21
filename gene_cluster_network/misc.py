@@ -8,6 +8,9 @@ Entrez.email = "testing@ucsd.edu"
 
 
 def parse_antiSMASH(content):
+    """ Parse antiSMASH output
+    """
+
     rule = r"""
         ^
         ClusterBlast\ scores\ for\ (?P<target>.*)\n+
@@ -132,6 +135,8 @@ def parse_antiSMASH(content):
 
 
 class antiSMASH_file(object):
+    """ A class to handle antiSMASH file output.
+    """
     def __init__(self, filename):
         self.data = {}
         self.load(filename)
@@ -170,6 +175,8 @@ def efetch_hit(term, seq_start, seq_stop):
 
 
 def download_hits(filename, output_path):
+    """ Download the GenBank block for all hits by antiSMASH
+    """
     c = antiSMASH_file(filename)
 
     for hit in c['SignificantHits'].keys()[:2]:
