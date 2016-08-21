@@ -58,13 +58,19 @@ def parse_antiSMASH(content):
         output['QueryCluster']['strands'].append(row.group(4))
         output['QueryCluster']['annotation'].append(row.group(5))
 
-    output['SignificantHits'] = {'id': [], 'name': [], 'description': []}
-    for row in re.finditer(r"""(\d+) \. \ (\w+) \t (.*) \n+""", parsed['SignificantHits'], re.VERBOSE):
-        output['SignificantHits']['id'].append(row.group(1))
-        output['SignificantHits']['name'].append(row.group(2))
-        output['SignificantHits']['description'].append(row.group(3))
+    #output['SignificantHits'] = {'id': [], 'name': [], 'description': []}
+    output['SignificantHits'] = {}
+    for row in re.finditer(r"""(?P<id>\d+) \. \ (?P<locus>\w+)_(?P<cluster>\w+) \t (?P<description>.*) \n+""", parsed['SignificantHits'], re.VERBOSE):
+        hit = row.groupdict()
 
-    output['Details'] = {}
+        if hit['locus'] not in output['SignificantHits']:
+            output['SignificantHits'][hit['locus']] = {}
+
+        if hit['cluster'] not in output['SignificantHits'][hit['locus']]:
+            output['SignificantHits'][hit['locus']][hit['cluster']] = {}
+
+        for v in ['id', 'description']:
+            output['SignificantHits'][hit['locus']][hit['cluster']][v] = hit[v]
 
     for block in re.finditer(r"""
             >>\n
@@ -85,30 +91,37 @@ def parse_antiSMASH(content):
               )
             \n+
 """, parsed['Details'], re.VERBOSE):
-        name = block.groupdict()['name']
-        output['Details'][name] = {'TableGenes': {}, 'TableBlast': {}}
+        #block = block.groupdict()
 
-        output['Details'][name]['TableGenes'] = {
+        tmp = {'TableGenes': {}, 'TableBlast': {}}
+
+        tmp = {
             'TableGenes': [], 'block': [], 'location_start': [],
             'location_end': [], 'strands': [], 'annotation': []}
         for row in re.finditer(r"""(\w+ \"?) \t (\w+) \t (\d+) \t (\d+) \t ([+|-]) \t (.*) \n""", block.groupdict()['TableGenes'], re.VERBOSE):
-            output['Details'][name]['TableGenes']['TableGenes'].append(row.group(1))
-            output['Details'][name]['TableGenes']['block'].append(row.group(2))
-            output['Details'][name]['TableGenes']['location_start'].append(row.group(3))
-            output['Details'][name]['TableGenes']['location_end'].append(row.group(4))
-            output['Details'][name]['TableGenes']['strands'].append(row.group(5))
-            output['Details'][name]['TableGenes']['annotation'].append(row.group(6))
+            tmp['TableGenes'].append(row.group(1))
+            tmp['block'].append(row.group(2))
+            tmp['location_start'].append(int(row.group(3)))
+            tmp['location_end'].append(int(row.group(4)))
+            tmp['strands'].append(row.group(5))
+            tmp['annotation'].append(row.group(6))
 
-        output['Details'][name]['TableBlast'] = {
+        output['SignificantHits'][block.groupdict()['locus']][block.groupdict()['cluster']]['TableGenes'] = \
+                tmp.copy()
+
+        tmp = {
             'QueryGene': [], 'SubjectGene': [], 'Identity': [],
             'BlastScore': [], 'Coverage': [], 'e-value': []}
         for row in re.finditer(r"""(\w+) \t (\w+ \"?) \t (\d+) \t (\d+) \t (\d+(?:\.\d+)?) \t (\d+\.\d+e[+|-]\d+) \t \n""", block.groupdict()['BlastHit'], re.VERBOSE):
-            output['Details'][name]['TableBlast']['QueryGene'].append(row.group(1))
-            output['Details'][name]['TableBlast']['SubjectGene'].append(row.group(2))
-            output['Details'][name]['TableBlast']['Identity'].append(row.group(3))
-            output['Details'][name]['TableBlast']['BlastScore'].append(row.group(4))
-            output['Details'][name]['TableBlast']['Coverage'].append(row.group(5))
-            output['Details'][name]['TableBlast']['e-value'].append(row.group(6))
+            tmp['QueryGene'].append(row.group(1))
+            tmp['SubjectGene'].append(row.group(2))
+            tmp['Identity'].append(row.group(3))
+            tmp['BlastScore'].append(row.group(4))
+            tmp['Coverage'].append(row.group(5))
+            tmp['e-value'].append(row.group(6))
+
+        output['SignificantHits'][block.groupdict()['locus']][block.groupdict()['cluster']]['TableBlast'] = \
+                tmp.copy()
 
     return output
 
