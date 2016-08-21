@@ -53,8 +53,8 @@ def parse_antiSMASH(content):
             'annotation': []}
     for row in re.finditer(r"""(\w+) \s+ (\d+) \s (\d+) \s ([+|-]) \s (\w+ (?:\s \w+)?) \s* \n+""", parsed['QueryCluster'], re.VERBOSE):
         output['QueryCluster']['TableGenes'].append(row.group(1))
-        output['QueryCluster']['location_start'].append(row.group(2))
-        output['QueryCluster']['location_end'].append(row.group(3))
+        output['QueryCluster']['location_start'].append(int(row.group(2)))
+        output['QueryCluster']['location_end'].append(int(row.group(3)))
         output['QueryCluster']['strands'].append(row.group(4))
         output['QueryCluster']['annotation'].append(row.group(5))
 
