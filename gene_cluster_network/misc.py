@@ -167,3 +167,23 @@ def efetch_hit(term, seq_start, seq_stop):
     content = handle.read()
 
     return content
+
+
+def download_hits(filename, output_path):
+    c = antiSMASH_file(filename)
+
+    for hit in c['SignificantHits'].keys()[:2]:
+        for cluster in c['SignificantHits'][hit]:
+            table_genes = c['SignificantHits'][hit][cluster]['TableGenes']
+
+            content = efetch_hit(
+                    term=hit,
+                    seq_start = min(table_genes['location_start']),
+                    seq_stop = max(table_genes['location_end']))
+
+            filename_out = os.path.join(
+                    output_path,
+                    "%s_%s.gbk" % (hit, cluster))
+            print "Saving %s" % filename_out
+            with open(filename_out, 'w') as f:
+                f.write(content)
