@@ -111,3 +111,23 @@ def parse_antiSMASH(content):
             output['Details'][name]['TableBlast']['e-value'].append(row.group(6))
 
     return output
+
+
+class antiSMASH_file(object):
+    def __init__(self, filename):
+        self.data = {}
+        self.load(filename)
+
+    def __getitem__(self, item):
+        return self.data[item]
+
+    def keys(self):
+        return self.data.keys()
+
+    def load(self, filename):
+        self.data = {}
+        with open(filename, 'r') as f:
+            parsed = parse_antiSMASH(f.read())
+            for v in parsed:
+                self.data[v] = parsed[v]
+
