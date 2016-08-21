@@ -18,7 +18,7 @@ test_requirements = [
 
 setup(
     name='gene_cluster_network',
-    version='0.0.1',
+    version='0.1.0',
     description="Python package for gene clustering",
     long_description=readme + '\n\n' + history,
     author="Tiago Leão, Gui Castelão",
