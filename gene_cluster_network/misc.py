@@ -1,5 +1,10 @@
 
+import os
 import re
+
+from Bio import Entrez
+
+Entrez.email = "testing@ucsd.edu"
 
 
 def parse_antiSMASH(content):
@@ -144,3 +149,21 @@ class antiSMASH_file(object):
             for v in parsed:
                 self.data[v] = parsed[v]
 
+
+def efetch_hit(term, seq_start, seq_stop):
+    """ Fetch the relevant part of a hit
+    """
+    Entrez.email = "castelao@gmail.com"
+
+    handle = Entrez.esearch(db="nucleotide", term=term)
+    record = Entrez.read(handle)
+
+    assert len(record['IdList']) == 1, \
+            "Sorry, I'm not ready to handle more than one record"
+
+    handle = Entrez.efetch(db="nucleotide", rettype="gb", retmode="text",
+            id=record['IdList'][0],
+            seq_start=seq_start, seq_stop=seq_stop)
+    content = handle.read()
+
+    return content
