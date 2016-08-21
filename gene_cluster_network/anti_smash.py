@@ -68,7 +68,7 @@ def parse_antiSMASH(content):
 
     for block in re.finditer(r"""
             >>\n
-            (?P<id>\d+) \. \ (?P<name>.+) \n
+            (?P<id>\d+) \. \ (?P<locus>\w+)_(?P<cluster>\w+) \n
             Source:\ (?P<source>.+) \n
             Type:\ (?P<type>.+) \n
             Number\ of\ proteins\ with\ BLAST\ hits\ to\ this\ cluster:\ \d+ \n
