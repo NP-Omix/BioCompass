@@ -51,7 +51,7 @@ $(TABLEDIR)/$(REFNAME)_db:
 	mkdir -p `dirname $@`
 	cd ../multigeneblast/; \
 		python makedb.py $@ \
-		`find ../database_clusters -name '*gbk' | head | awk '{print $$0}' ORS=' '`
+		`find ../database_clusters -name '*gbk' | awk '{print $$0}' ORS=' '`
 
 
 
