@@ -37,6 +37,9 @@ $(TABLEDIR)/$(REFNAME)_%_table2_1.csv: $(TABLEDIR)/$(REFNAME)_%.gbk
 	cd $(TABLEDIR); python ../../gene_cluster_network/subcluster_gen.py $(REFNAME)_$*
 
 $(TABLEDIR)/$(REFNAME)_db:
+	for file in $(CLUSTER_LIST); \
+		do BioCompass $$file ../database_clusters; \
+		done
 	# E. Creating multigeneBLAST database:
 	#
 	# cd ../../multigeneblast_1.1.14/
