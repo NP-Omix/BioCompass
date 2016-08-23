@@ -34,6 +34,16 @@ $(TABLEDIR)/$(REFNAME)_%_table2_1.csv: $(TABLEDIR)/$(REFNAME)_%.gbk
 	# D. Creating distance matrixes and running DBScan for subcluster divisions (table 2):
 	cd $(TABLEDIR); python ../../gene_cluster_network/subcluster_gen.py $(REFNAME)_$*
 
+	# E. Creating multigeneBLAST database:
+	#cd ../multigeneblast/; \
+	#	ls -d ../database_clusters/*/ > subjects.txt \
+	#	python makedb.py $(REFNAME)_db \
+	#	`cat subjects.txt | awk -v ORS='* '  '{ print $$1 }' | sed 's/,\$/\n/'`
+
+	cd ../multigeneblast/; \
+		find ../database_clusters -name '*gbk' | awk '{print $0}' ORS=' ' > gbk_list.txt; \
+		python makedb.py PAL_db `cat gbk_list.txt` \
+		#rm gbk_list.txt
 #legacy:
 #	./run_bgcnet.sh
 
