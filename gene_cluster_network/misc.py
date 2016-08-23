@@ -179,7 +179,7 @@ def download_hits(filename, output_path):
     """
     c = antiSMASH_file(filename)
 
-    for hit in c['SignificantHits'].keys()[:2]:
+    for hit in c['SignificantHits'].keys():
         for cluster in c['SignificantHits'][hit]:
             table_genes = c['SignificantHits'][hit][cluster]['TableGenes']
 
