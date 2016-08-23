@@ -11,6 +11,7 @@ OUTPUTDIR=../outputs
 
 TABLEDIR=$(OUTPUTDIR)/tables
 
+CLUSTER_LIST=`find  ../antiSMASH_input/$(REFNAME)/clusterblast -iname 'cluster*txt'`
 
 # ============================================================================
 .SECONDARY:
