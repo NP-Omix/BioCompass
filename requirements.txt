@@ -1,0 +1,5 @@
+Click>=6.0
+scipy==0.18.0
+pandas==0.18.1
+scikit-learn==0.17.1
+biopython==1.67

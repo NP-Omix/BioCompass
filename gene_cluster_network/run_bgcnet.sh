@@ -16,18 +16,6 @@ rm clusters.txt
 
 #if [ -d ../outputs/tables/ ]; then rm -r ../outputs/tables/; mkdir ../outputs/tables/; mv $1_* ../outputs/tables/; else mkdir ../outputs/tables/; mv $1_* ../outputs/tables/; fi
 
-# E. Creating multigeneBLAST database:
-
-cd ../../multigeneblast_1.1.14/
-
-ls -d ../database_clusters/*/ | cat > subjects.txt
-
-command=`cat subjects.txt | awk -v ORS='* '  '{ print $1 }' | sed 's/,$/\n/'`
-
-python makedb.py $1_db $command
-
-rm subjects.txt
-
 # F. Running multigeneBLAST:
 
 if [ -d ./mgb_result/ ] ; then rm -r ./mgb_result/ ; mkdir ./mgb_result/ ; else mkdir ./mgb_result/ ; fi
