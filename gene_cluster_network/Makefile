@@ -19,6 +19,7 @@ CLUSTER_LIST=`find  ../antiSMASH_input/$(REFNAME)/clusterblast -iname 'cluster*t
 ALL:
 	for file in `ls $(INPUTDIR)/$(REFNAME)/*cluster*.gbk`; do $(MAKE) $(TABLEDIR)/$(REFNAME)_`basename $$file | sed -e s/.*cluster// | sed -e s/\.gbk//`_table2_1.csv; done
 	$(MAKE) $(TABLEDIR)/$(REFNAME)_db
+	$(MAKE) Run_multigeneBLAST
 
 #$(REFNAME)_%.gbk:
 $(TABLEDIR)/$(REFNAME)_%.gbk:
@@ -57,6 +58,94 @@ $(TABLEDIR)/$(REFNAME)_db:
 	cd ../multigeneblast/; \
 		python makedb.py $@ \
 		`find ../database_clusters -name '*gbk' | awk '{print $$0}' ORS=' '`
+
+
+Run_multigeneBLAST:
+
+	# F. Running multigeneBLAST:
+
+	#if [ -d ./mgb_result/ ] ; then rm -r ./mgb_result/ ; mkdir ./mgb_result/ ; else mkdir ./mgb_result/ ; fi
+	#
+	#if [ $num -gt 9 ];
+	#        then
+	#                        for i in {1..9}
+	#                        do
+	#                                ls ../outputs/tables/$1_00${i}_table2_*.csv | cat > itineration.txt
+	#                                iti=`cat itineration.txt | wc -l`
+	#                                for j in $(seq 1 $iti);
+	#                                do
+	#                                        table2=../outputs/tables/$1_00${i}_table2_${j}.csv
+	#                                        while IFS= read -r line; do
+	#                                                case "$line" in 'BGC'*) continue ;; esac
+	#                                                genes=`echo $line | awk '{print $4}'`
+	#                                                sub=`echo $line | awk '{print $5}'`
+	#                                                python ./multigeneblast.py -db $1_db -in ../outputs/tables/$1_00${i}.gbk -hitspergene 50 -minseqcov 80 -minpercid 50 -genes $genes -out mgb_result/$1_00${i}_${j}_$sub
+	#                                        done < $table2
+	#                                done
+	#                                rm itineration.txt
+	#                        done
+	#                        for i in $(seq 10 $num);
+	#                        do
+	#                                ls ../outputs/tables/$1_0${i}_table2_*.csv | cat > itineration.txt
+	#                                iti=`cat itineration.txt | wc -l`
+	#                                for j in $(seq 1 $iti);
+	#                                do
+	#                                        table2=../outputs/tables/$1_0${i}_table2_${j}.csv
+	#                                        while IFS= read -r line; do
+	#                                                case "$line" in 'BGC'*) continue ;; esac
+	#                                                genes=`echo $line | awk '{print $4}'`
+	#                                                sub=`echo $line | awk '{print $5}'`
+	#                                                python ./multigeneblast.py -db $1_db -in ../outputs/tables/$1_0${i}.gbk -hitspergene 50 -minseqcov 80 -minpercid 50 -genes $genes -out mgb_result/$1_0${i}_${j}_$sub
+	#                                        done < $table2
+	#                                done
+	#                                rm itineration.txt
+	#                        done
+	#                else
+	#                        for i in $(seq 1 $num);
+	#                        do
+	#                                ls ../outputs/tables/$1_00${i}_table2_*.csv | cat > itineration.txt
+	#                                iti=`cat itineration.txt | wc -l`
+	#                                for j in $(seq 1 $iti);
+	#                                do
+	#                                        table2=../outputs/tables/$1_00${i}_table2_${j}.csv
+	#                                        while IFS= read -r line; do
+	#                                                case "$line" in 'BGC'*) continue ;; esac
+	#                                                genes=`echo $line | awk '{print $4}'`
+	#                                                sub=`echo $line | awk '{print $5}'`
+	#                                                python ./multigeneblast.py -db $1_db -in ../outputs/tables/$1_00${i}.gbk -hitspergene 50 -minseqcov 80 -minpercid 50 -genes $genes -out mgb_result/$1_00${i}_${j}_$sub
+	#                                        done < $table2
+	#                                done
+	#                                rm itineration.txt
+	#                        done
+	#fi
+	#
+	#mv mgb_result ../outputs/
+
+	mkdir -p ${OUTPUTDIR}/mgb_result
+
+	cd ../multigeneblast; \
+	num=`ls ../antiSMASH_input/${REFNAME}/*gbk | wc -l`; \
+	for i in $$(seq 1 $$num); \
+	    do n=`printf "%03d\n" $$i`; \
+	    echo $$n; \
+	    nclusters=`ls ${TABLEDIR}/${REFNAME}_$${n}_table2_*.csv  | wc -l`; \
+	    echo "nclusters: "$${nclusters}; \
+	    for j in $$(seq 1 $${nclusters}); \
+	        do echo "j: "$$j; \
+	        table2=${TABLEDIR}/${REFNAME}_$${n}_table2_$${j}.csv; \
+		echo $$j; \
+		while IFS= read -r line; \
+		    do case "$$line" in 'BGC'*) continue ;; esac; \
+		    genes=`echo $$line | awk '{print $$4}'`; \
+		    sub=`echo $$line | awk '{print $$5}'`; \
+		    python ./multigeneblast.py -db ${REFNAME}_db \
+		        -in ${TABLEDIR}/${REFNAME}_$${n}.gbk \
+			-hitspergene 50 -minseqcov 80 -minpercid 50 \
+			-genes $${genes} \
+			-out ${OUTPUTDIR}/mgb_result/${REFNAME}_$${n}_$${j}_$${sub}; \
+	            done < $$table2; \
+	        done; \
+	    done
 
 
 
