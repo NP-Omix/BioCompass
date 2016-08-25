@@ -1,6 +1,4 @@
 
-# To run:
-# $ make INPUTDIR='path/to/antiSMASH_input'; run_bgcnet.sh
 
 SHELL = /bin/bash
 
@@ -15,6 +13,10 @@ CLUSTER_LIST=`find  ../antiSMASH_input/$(REFNAME)/clusterblast -iname 'cluster*t
 
 # ============================================================================
 .SECONDARY:
+
+help:
+	@echo "To run:"
+	@echo "make INPUTDIR='path/to/antiSMASH_input' MULTIGENEBLASTDIR='path/to/multigeneblast' ALL; run_bgcnet.sh"
 
 ALL:
 	for file in `ls $(INPUTDIR)/$(REFNAME)/*cluster*.gbk`; do $(MAKE) $(TABLEDIR)/$(REFNAME)_`basename $$file | sed -e s/.*cluster// | sed -e s/\.gbk//`_table2_1.csv; done
