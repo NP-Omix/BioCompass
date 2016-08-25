@@ -5,11 +5,17 @@ SHELL = /bin/bash
 REFNAME = PAL
 
 INPUTDIR=../antiSMASH_input
+MULTIGENEBLASTDIR=../multigeneblast
+
+
 OUTPUTDIR=../outputs
-
 TABLEDIR=$(OUTPUTDIR)/tables
+MAKEDB=$(MULTIGENEBLASTDIR)/makedb.py
+MULTIGENEBLAST=$(MULTIGENEBLASTDIR)/multigeneblast.py
 
-CLUSTER_LIST=`find  ../antiSMASH_input/$(REFNAME)/clusterblast -iname 'cluster*txt'`
+ClustersDatabase=../database_clusters
+
+CLUSTER_LIST=`find  $(INPUTDIR)/$(REFNAME)/clusterblast -iname 'cluster*txt'`
 
 # ============================================================================
 .SECONDARY:
@@ -57,8 +63,7 @@ $(TABLEDIR)/$(REFNAME)_db:
 	# rm subjects.txt
 
 	mkdir -p `dirname $@`
-	cd ../multigeneblast/; \
-		python makedb.py $@ \
+	python $(MAKEDB) $@ \
 		`find ../database_clusters -name '*gbk' | awk '{print $$0}' ORS=' '`
 
 
@@ -125,8 +130,7 @@ Run_multigeneBLAST:
 
 	mkdir -p ${OUTPUTDIR}/mgb_result
 
-	cd ../multigeneblast; \
-	num=`ls ../antiSMASH_input/${REFNAME}/*gbk | wc -l`; \
+	num=`ls $(INPUTDIR)/${REFNAME}/*gbk | wc -l`; \
 	for i in $$(seq 1 $$num); \
 	    do n=`printf "%03d\n" $$i`; \
 	    echo $$n; \
@@ -140,7 +144,8 @@ Run_multigeneBLAST:
 		    do case "$$line" in 'BGC'*) continue ;; esac; \
 		    genes=`echo $$line | awk '{print $$4}'`; \
 		    sub=`echo $$line | awk '{print $$5}'`; \
-		    python ./multigeneblast.py -db ${REFNAME}_db \
+		    python $(MULTIGENEBLAST) \
+		        -db $(TABLEDIR)/$(REFNAME)_db \
 		        -in ${TABLEDIR}/${REFNAME}_$${n}.gbk \
 			-hitspergene 50 -minseqcov 80 -minpercid 50 \
 			-genes $${genes} \
