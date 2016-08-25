@@ -45,11 +45,13 @@ $(TABLEDIR)/$(REFNAME)_%_table2_1.csv: $(TABLEDIR)/$(REFNAME)_%.gbk
 	# D. Creating distance matrixes and running DBScan for subcluster divisions (table 2):
 	cd $(TABLEDIR); python ../../gene_cluster_network/subcluster_gen.py $(REFNAME)_$*
 
-$(TABLEDIR)/$(REFNAME)_db:
-	mkdir -p ../database_clusters
+$(ClustersDatabase):
+	mkdir -p $@
 	for file in $(CLUSTER_LIST); \
-		do BioCompass $$file ../database_clusters; \
+		do BioCompass $$file $@; \
 		done
+
+$(TABLEDIR)/$(REFNAME)_db: $(ClustersDatabase)
 	# E. Creating multigeneBLAST database:
 	#
 	# cd ../../multigeneblast_1.1.14/
