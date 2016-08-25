@@ -1,20 +1,28 @@
 
-# To run:
-# $ make INPUTDIR='path/to/antiSMASH_input'; run_bgcnet.sh
 
 SHELL = /bin/bash
 
 REFNAME = PAL
 
 INPUTDIR=../antiSMASH_input
+MULTIGENEBLASTDIR=../multigeneblast
+
+
 OUTPUTDIR=../outputs
-
 TABLEDIR=$(OUTPUTDIR)/tables
+MAKEDB=$(MULTIGENEBLASTDIR)/makedb.py
+MULTIGENEBLAST=$(MULTIGENEBLASTDIR)/multigeneblast.py
 
-CLUSTER_LIST=`find  ../antiSMASH_input/$(REFNAME)/clusterblast -iname 'cluster*txt'`
+ClustersDatabase=../database_clusters
+
+CLUSTER_LIST=`find  $(INPUTDIR)/$(REFNAME)/clusterblast -iname 'cluster*txt'`
 
 # ============================================================================
 .SECONDARY:
+
+help:
+	@echo "To run:"
+	@echo "make INPUTDIR='path/to/antiSMASH_input' MULTIGENEBLASTDIR='path/to/multigeneblast' ALL; run_bgcnet.sh"
 
 ALL:
 	for file in `ls $(INPUTDIR)/$(REFNAME)/*cluster*.gbk`; do $(MAKE) $(TABLEDIR)/$(REFNAME)_`basename $$file | sed -e s/.*cluster// | sed -e s/\.gbk//`_table2_1.csv; done
@@ -37,11 +45,13 @@ $(TABLEDIR)/$(REFNAME)_%_table2_1.csv: $(TABLEDIR)/$(REFNAME)_%.gbk
 	# D. Creating distance matrixes and running DBScan for subcluster divisions (table 2):
 	cd $(TABLEDIR); python ../../gene_cluster_network/subcluster_gen.py $(REFNAME)_$*
 
-$(TABLEDIR)/$(REFNAME)_db:
-	mkdir -p ../database_clusters
+$(ClustersDatabase):
+	mkdir -p $@
 	for file in $(CLUSTER_LIST); \
-		do BioCompass $$file ../database_clusters; \
+		do BioCompass $$file $@; \
 		done
+
+$(TABLEDIR)/$(REFNAME)_db: $(ClustersDatabase)
 	# E. Creating multigeneBLAST database:
 	#
 	# cd ../../multigeneblast_1.1.14/
@@ -55,8 +65,7 @@ $(TABLEDIR)/$(REFNAME)_db:
 	# rm subjects.txt
 
 	mkdir -p `dirname $@`
-	cd ../multigeneblast/; \
-		python makedb.py $@ \
+	python $(MAKEDB) $@ \
 		`find ../database_clusters -name '*gbk' | awk '{print $$0}' ORS=' '`
 
 
@@ -123,8 +132,7 @@ Run_multigeneBLAST:
 
 	mkdir -p ${OUTPUTDIR}/mgb_result
 
-	cd ../multigeneblast; \
-	num=`ls ../antiSMASH_input/${REFNAME}/*gbk | wc -l`; \
+	num=`ls $(INPUTDIR)/${REFNAME}/*gbk | wc -l`; \
 	for i in $$(seq 1 $$num); \
 	    do n=`printf "%03d\n" $$i`; \
 	    echo $$n; \
@@ -138,7 +146,8 @@ Run_multigeneBLAST:
 		    do case "$$line" in 'BGC'*) continue ;; esac; \
 		    genes=`echo $$line | awk '{print $$4}'`; \
 		    sub=`echo $$line | awk '{print $$5}'`; \
-		    python ./multigeneblast.py -db ${REFNAME}_db \
+		    python $(MULTIGENEBLAST) \
+		        -db $(TABLEDIR)/$(REFNAME)_db \
 		        -in ${TABLEDIR}/${REFNAME}_$${n}.gbk \
 			-hitspergene 50 -minseqcov 80 -minpercid 50 \
 			-genes $${genes} \
