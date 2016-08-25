@@ -69,7 +69,7 @@ $(TABLEDIR)/$(REFNAME)_db: $(ClustersDatabase)
 		`find ../database_clusters -name '*gbk' | awk '{print $$0}' ORS=' '`
 
 
-Run_multigeneBLAST:
+Run_multigeneBLAST: $(TABLEDIR)/$(REFNAME)_db
 
 	# F. Running multigeneBLAST:
 

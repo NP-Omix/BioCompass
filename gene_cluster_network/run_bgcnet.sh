@@ -16,64 +16,6 @@ rm clusters.txt
 
 #if [ -d ../outputs/tables/ ]; then rm -r ../outputs/tables/; mkdir ../outputs/tables/; mv $1_* ../outputs/tables/; else mkdir ../outputs/tables/; mv $1_* ../outputs/tables/; fi
 
-# F. Running multigeneBLAST:
-
-if [ -d ./mgb_result/ ] ; then rm -r ./mgb_result/ ; mkdir ./mgb_result/ ; else mkdir ./mgb_result/ ; fi
-
-if [ $num -gt 9 ];
-        then
-			for i in {1..9}
-			do
-				ls ../outputs/tables/$1_00${i}_table2_*.csv | cat > itineration.txt
-				iti=`cat itineration.txt | wc -l`
-				for j in $(seq 1 $iti);
-				do
-					table2=../outputs/tables/$1_00${i}_table2_${j}.csv
-					while IFS= read -r line; do
-						case "$line" in 'BGC'*) continue ;; esac
-						genes=`echo $line | awk '{print $4}'`
-						sub=`echo $line | awk '{print $5}'`
-						python ./multigeneblast.py -db $1_db -in ../outputs/tables/$1_00${i}.gbk -hitspergene 50 -minseqcov 80 -minpercid 50 -genes $genes -out mgb_result/$1_00${i}_${j}_$sub
-					done < $table2
-				done
-				rm itineration.txt
-			done
-			for i in $(seq 10 $num);
-			do
-				ls ../outputs/tables/$1_0${i}_table2_*.csv | cat > itineration.txt
-				iti=`cat itineration.txt | wc -l`
-				for j in $(seq 1 $iti);
-				do
-					table2=../outputs/tables/$1_0${i}_table2_${j}.csv
-					while IFS= read -r line; do
-						case "$line" in 'BGC'*) continue ;; esac
-						genes=`echo $line | awk '{print $4}'`
-						sub=`echo $line | awk '{print $5}'`
-						python ./multigeneblast.py -db $1_db -in ../outputs/tables/$1_0${i}.gbk -hitspergene 50 -minseqcov 80 -minpercid 50 -genes $genes -out mgb_result/$1_0${i}_${j}_$sub
-					done < $table2
-				done
-				rm itineration.txt
-			done
-		else
-			for i in $(seq 1 $num);
-			do
-				ls ../outputs/tables/$1_00${i}_table2_*.csv | cat > itineration.txt
-				iti=`cat itineration.txt | wc -l`
-				for j in $(seq 1 $iti);
-				do
-					table2=../outputs/tables/$1_00${i}_table2_${j}.csv
-					while IFS= read -r line; do
-						case "$line" in 'BGC'*) continue ;; esac
-						genes=`echo $line | awk '{print $4}'`
-						sub=`echo $line | awk '{print $5}'`
-						python ./multigeneblast.py -db $1_db -in ../outputs/tables/$1_00${i}.gbk -hitspergene 50 -minseqcov 80 -minpercid 50 -genes $genes -out mgb_result/$1_00${i}_${j}_$sub
-					done < $table2
-				done
-				rm itineration.txt
-			done
-fi
-
-mv mgb_result ../outputs/
 
 
 # G. Creating table of edges:
