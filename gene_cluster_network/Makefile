@@ -82,7 +82,7 @@ $(TABLEDIR)/$(REFNAME)_db: $(ClustersDatabase)
 	mkdir -p `dirname $@`
 	export PATH="$(PATH):$(MULTIGENEBLASTDIR)"; \
 	python $(MAKEDB) $@ \
-		`find ../database_clusters -name '*gbk' | awk '{print $$0}' ORS=' '`
+		`find $(ClustersDatabase) -name '*gbk' | awk '{print $$0}' ORS=' '`
 
 
 Run_multigeneBLAST: $(TABLE2_1) $(TABLEDIR)/$(REFNAME)_db
