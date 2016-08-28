@@ -285,7 +285,33 @@ step_G:
 	cd $(MBGDIR); \
 	python $(SRC)/keep_best_itineration.py $(REFNAME)
 
+step_H: step_G
+	## H. Filtering and generating final outputs:
+	#
+	#python ../../bin/filter_edges.py $1
+	#
+	#python ../../bin/feature_gen.py $1 $1_edges_filtered.txt
+	#
+	## mv ./$1_table3.csv ../../outputs/tables/
+	#mv ./$1_features.txt ../../outputs/
+	#mv ./$1_edges_all_itineration.txt ../../outputs/
+	#mv ./$1_edges_best_itineration.txt ../../outputs/
+	#mv ./$1_edges_filtered.txt ../../outputs/
+	#
+	#end_time=`date +%s`
+	#echo The execution time was `expr $end_time - $start_time`s.
 
+	cd $(MBGDIR); \
+		python $(SRC)/filter_edges.py $(REFNAME)
+
+	cd $(MBGDIR); \
+		python $(SRC)/feature_gen.py $(REFNAME) $(REFNAME)_edges_filtered.txt
+
+	# mv ./$1_table3.csv ../../outputs/tables/
+	mv $(MBGDIR)/$(REFNAME)_features.txt $(OUTPUTDIR)
+	mv $(MBGDIR)/$(REFNAME)_edges_all_itineration.txt $(OUTPUTDIR)
+	mv $(MBGDIR)/$(REFNAME)_edges_best_itineration.txt $(OUTPUTDIR)
+	mv $(MBGDIR)/$(REFNAME)_edges_filtered.txt $(OUTPUTDIR)
 
 #legacy:
 #	./run_bgcnet.sh
