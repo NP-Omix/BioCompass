@@ -22,6 +22,8 @@ ClustersDatabase=$(OUTPUTDIR)/database_clusters
 GBK_INPUT_LIST=$(shell ls $(INPUTDIR)/$(REFNAME)/*cluster*.gbk)
 CLUSTER_LIST=$(shell find  $(INPUTDIR)/$(REFNAME)/clusterblast -iname 'cluster*txt')
 
+
+TABLE2_1 = $(foreach v, $(GBK_INPUT_LIST), $(TABLEDIR)/$(REFNAME)_$(shell basename $v | sed -e s/.*cluster// | sed -e s/\.gbk//)_table2_1.csv)
 # ============================================================================
 .SECONDARY:
 
@@ -75,7 +77,7 @@ $(TABLEDIR)/$(REFNAME)_db: $(ClustersDatabase)
 		`find ../database_clusters -name '*gbk' | awk '{print $$0}' ORS=' '`
 
 
-Run_multigeneBLAST: $(TABLEDIR)/$(REFNAME)_db
+Run_multigeneBLAST: $(TABLE2_1) $(TABLEDIR)/$(REFNAME)_db
 
 	# F. Running multigeneBLAST:
 
