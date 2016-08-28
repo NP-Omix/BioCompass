@@ -197,14 +197,25 @@ def download_hits(filename, output_path):
         for cluster in c['SignificantHits'][hit]:
             table_genes = c['SignificantHits'][hit][cluster]['TableGenes']
 
-            content = efetch_hit(
-                    term=hit,
-                    seq_start = min(table_genes['location_start']),
-                    seq_stop = max(table_genes['location_end']))
-
             filename_out = os.path.join(
                     output_path,
-                    "%s_%s.gbk" % (hit, cluster))
-            print "Saving %s" % filename_out
-            with open(filename_out, 'w') as f:
-                f.write(content)
+                    "%s_%s_%s-%s.gbk" % (hit, cluster,
+                        min(table_genes['location_start']),
+                        max(table_genes['location_end'])))
+
+            if os.path.isfile(filename_out):
+                print "Already downloaded %s" % filename_out
+            else:
+                print "Requesting hit: %s, start: %s, end: %s" % (
+                        hit,
+                        min(table_genes['location_start']),
+                        max(table_genes['location_end']))
+
+                content = efetch_hit(
+                    term=hit,
+                    seq_start=min(table_genes['location_start']),
+                    seq_stop=max(table_genes['location_end']))
+
+                print "Saving %s" % filename_out
+                with open(filename_out, 'w') as f:
+                    f.write(content)
