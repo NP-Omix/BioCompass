@@ -11,6 +11,7 @@ INPUTDIR=$(ROOT)/antiSMASH_input
 MULTIGENEBLASTDIR=$(ROOT)/multigeneblast
 OUTPUTDIR=$(ROOT)/outputs
 
+MBGDIR=$(OUTPUTDIR)/mgb_result
 
 TABLEDIR=$(OUTPUTDIR)/tables
 MAKEDB=$(MULTIGENEBLASTDIR)/makedb.py
@@ -160,6 +161,118 @@ Run_multigeneBLAST: $(TABLEDIR)/$(REFNAME)_db
 	        done; \
 	    done
 
+
+step_G:
+	## G. Creating table of edges:
+	#
+	#cd ../outputs/mgb_result/
+	#
+	#if [ $num -gt 9 ];
+	#        then
+	#                        for i in {1..9}
+	#                        do
+	#                                if [ $i -eq 1 ]
+	#                                then
+	#                                        python ../../bin/edges_gen.py $1_001 1
+	#                                        mv $1_001_edges_1.txt $1_edges_all_itineration.txt
+	#                                        ls ../tables/$1_00${i}_table2_*.csv | cat > itineration.txt
+	#                                        iti=`cat itineration.txt | wc -l`
+	#                                        for j in $(seq 2 $iti);
+	#                                        do
+	#                                        python ../../bin/edges_gen.py $1_00${i} ${j}
+	#                                        cat $1_00${i}_edges_${j}.txt | sed 1d >> $1_edges_all_itineration.txt
+	#                                        rm $1_00${i}_edges_${j}.txt
+	#                                        done
+	#                                else
+	#                                        ls ../tables/$1_00${i}_table2_*.csv | cat > itineration.txt
+	#                                        iti=`cat itineration.txt | wc -l`
+	#                                        for j in $(seq 1 $iti);
+	#                                        do
+	#                                        python ../../bin/edges_gen.py $1_00${i} ${j}
+	#                                        cat $1_00${i}_edges_${j}.txt | sed 1d >> $1_edges_all_itineration.txt
+	#                                        rm $1_00${i}_edges_${j}.txt
+	#                                        done
+	#                                fi
+	#                        done
+	#                        for i in $(seq 10 $num);
+	#                        do
+	#                                ls ../tables/$1_0${i}_table2_*.csv | cat > itineration.txt
+	#                                iti=`cat itineration.txt | wc -l`
+	#                                for j in $(seq 1 $iti);
+	#                                do
+	#                                python ../../bin/edges_gen.py $1_0${i} ${j}
+	#                                cat $1_0${i}_edges_${j}.txt | sed 1d >> $1_edges_all_itineration.txt
+	#                                rm $1_0${i}_edges_${j}.txt
+	#                                done
+	#                        done
+	#                else
+	#                        for i in $(seq 1 $num);
+	#                        do
+	#                                if [ $i -eq 1 ]
+	#                                then
+	#                                        python ../../bin/edges_gen.py $1_001 1
+	#                                        mv $1_001_edges_1.txt $1_edges_all_itineration.txt
+	#                                        ls ../tables/$1_00${i}_table2_*.csv | cat > itineration.txt
+	#                                        iti=`cat itineration.txt | wc -l`
+	#                                        for j in $(seq 2 $iti);
+	#                                        do
+	#                                        python ../../bin/edges_gen.py $1_00${i} ${j}
+	#                                        cat $1_00${i}_edges_${j}.txt | sed 1d >> $1_edges_all_itineration.txt
+	#                                        rm $1_00${i}_edges_${j}.txt
+	#                                        done
+	#                                else
+	#                                        ls ../tables/$1_00${i}_table2_*.csv | cat > itineration.txt
+	#                                        iti=`cat itineration.txt | wc -l`
+	#                                        for j in $(seq 1 $iti);
+	#                                        do
+	#                                        python ../../bin/edges_gen.py $1_00${i} ${j}
+	#                                        cat $1_00${i}_edges_${j}.txt | sed 1d >> $1_edges_all_itineration.txt
+	#                                        rm $1_00${i}_edges_${j}.txt
+	#                                        done
+	#                                fi
+	#                        done
+	#fi
+	#
+	#rm itineration.txt
+	#
+	#python ../../bin/keep_best_itineration.py $1
+
+	mkdir -p $(MBGDIR)
+
+	cd $(MBGDIR); \
+	num=`echo $(GBK_INPUT_LIST) | wc -w`; \
+	for i in $$(seq 1 $$num); \
+	    do n=`printf "%03d\n" $$i`; \
+	    if [ $$i -eq 1 ]; \
+	        then \
+		    python $(SRC)/edges_gen.py $(REFNAME)_$${n} 1; \
+		    mv $(REFNAME)_001_edges_1.txt $(REFNAME)_edges_all_itineration.txt; \
+		    ls $(TABLEDIR)/$(REFNAME)_$${n}_table2_*.csv | cat > itineration.txt; \
+		    iti=`cat itineration.txt | wc -l`; \
+		    for j in $$(seq 2 $$iti); \
+		        do \
+	                python $(SRC)/edges_gen.py $(REFNAME)_$${n} $${j}; \
+		        cat $(REFNAME)_$${n}_edges_$${j}.txt | \
+			    sed 1d >> $(REFNAME)_edges_all_itineration.txt; \
+		        rm $(REFNAME)_$${n}_edges_$${j}.txt; \
+			done; \
+		else \
+	            ls $(TABLEDIR)/$(REFNAME)_$${n}_table2_*.csv | cat > itineration.txt; \
+		    iti=`cat itineration.txt | wc -l`; \
+		    for j in $$(seq 1 $$iti); \
+		        do \
+			python $(SRC)/edges_gen.py $(REFNAME)_$${n} $${j}; \
+			cat $(REFNAME)_$${n}_edges_$${j}.txt | \
+			    sed 1d >> $(REFNAME)_edges_all_itineration.txt; \
+			rm $(REFNAME)_$${n}_edges_$${j}.txt; \
+			done; \
+		fi; \
+	    done
+
+	rm $(MBGDIR)/itineration.txt
+
+	cd $(MBGDIR); \
+	python $(SRC)/keep_best_itineration.py $(REFNAME)
 
 
 
