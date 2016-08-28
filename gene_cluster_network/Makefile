@@ -19,7 +19,8 @@ MULTIGENEBLAST=$(MULTIGENEBLASTDIR)/multigeneblast.py
 
 ClustersDatabase=$(OUTPUTDIR)/database_clusters
 
-CLUSTER_LIST=`find  $(INPUTDIR)/$(REFNAME)/clusterblast -iname 'cluster*txt'`
+GBK_INPUT_LIST=$(shell ls $(INPUTDIR)/$(REFNAME)/*cluster*.gbk)
+CLUSTER_LIST=$(shell find  $(INPUTDIR)/$(REFNAME)/clusterblast -iname 'cluster*txt')
 
 # ============================================================================
 .SECONDARY:
@@ -137,7 +138,7 @@ Run_multigeneBLAST: $(TABLEDIR)/$(REFNAME)_db
 
 	mkdir -p ${OUTPUTDIR}/mgb_result
 
-	num=`ls $(INPUTDIR)/${REFNAME}/*gbk | wc -l`; \
+	num=`echo $(GBK_INPUT_LIST) | wc -w`; \
 	for i in $$(seq 1 $$num); \
 	    do n=`printf "%03d\n" $$i`; \
 	    echo $$n; \
