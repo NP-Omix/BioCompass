@@ -6,6 +6,7 @@ REFNAME = PAL
 
 ROOT=$(shell cd ../; pwd)
 
+SRC=$(ROOT)/gene_cluster_network
 INPUTDIR=$(ROOT)/antiSMASH_input
 MULTIGENEBLASTDIR=$(ROOT)/multigeneblast
 OUTPUTDIR=$(ROOT)/outputs
