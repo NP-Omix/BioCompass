@@ -4,11 +4,13 @@ SHELL = /bin/bash
 
 REFNAME = PAL
 
-INPUTDIR=../antiSMASH_input
-MULTIGENEBLASTDIR=../multigeneblast
+ROOT=$(shell cd ../; pwd)
+
+INPUTDIR=$(ROOT)/antiSMASH_input
+MULTIGENEBLASTDIR=$(ROOT)/multigeneblast
+OUTPUTDIR=$(ROOT)/outputs
 
 
-OUTPUTDIR=../outputs
 TABLEDIR=$(OUTPUTDIR)/tables
 MAKEDB=$(MULTIGENEBLASTDIR)/makedb.py
 MULTIGENEBLAST=$(MULTIGENEBLASTDIR)/multigeneblast.py
