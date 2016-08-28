@@ -1,6 +1,7 @@
 
 
 SHELL = /bin/bash
+#TESTING = 1
 
 REFNAME = PAL
 
@@ -22,6 +23,13 @@ ClustersDatabase=$(OUTPUTDIR)/database_clusters
 GBK_INPUT_LIST=$(shell ls $(INPUTDIR)/$(REFNAME)/*cluster*.gbk)
 CLUSTER_LIST=$(shell find  $(INPUTDIR)/$(REFNAME)/clusterblast -iname 'cluster*txt')
 
+
+ifdef TESTING
+    ifeq ($(TESTING),1)
+        GBK_INPUT_LIST=$(shell ls $(INPUTDIR)/$(REFNAME)/*cluster*.gbk | head -n 2)
+        CLUSTER_LIST=$(shell find  $(INPUTDIR)/$(REFNAME)/clusterblast -iname 'cluster*txt' | head -n 2)
+    endif
+endif
 
 TABLE2_1 = $(foreach v, $(GBK_INPUT_LIST), $(TABLEDIR)/$(REFNAME)_$(shell basename $v | sed -e s/.*cluster// | sed -e s/\.gbk//)_table2_1.csv)
 # ============================================================================
