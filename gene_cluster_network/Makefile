@@ -58,7 +58,7 @@ $(TABLEDIR)/$(REFNAME)_%.gbk:
 
 $(TABLEDIR)/$(REFNAME)_%_table2_1.csv: $(TABLEDIR)/$(REFNAME)_%.gbk
 	# D. Creating distance matrixes and running DBScan for subcluster divisions (table 2):
-	cd $(TABLEDIR); python $(ROOT)/subcluster_gen.py $(REFNAME)_$*
+	cd $(TABLEDIR); python $(SRC)/subcluster_gen.py $(REFNAME)_$*
 
 $(ClustersDatabase):
 	mkdir -p $@
