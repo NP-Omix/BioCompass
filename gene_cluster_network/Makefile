@@ -40,9 +40,8 @@ help:
 	@echo "make INPUTDIR='path/to/antiSMASH_input' MULTIGENEBLASTDIR='path/to/multigeneblast' ALL; run_bgcnet.sh"
 
 ALL:
-	for file in `ls $(INPUTDIR)/$(REFNAME)/*cluster*.gbk`; do $(MAKE) $(TABLEDIR)/$(REFNAME)_`basename $$file | sed -e s/.*cluster// | sed -e s/\.gbk//`_table2_1.csv; done
-	$(MAKE) $(TABLEDIR)/$(REFNAME)_db
-	$(MAKE) Run_multigeneBLAST
+	$(MAKE) $(MBGDIR)/$(REFNAME)_001_1_A
+	$(MAKE) step_H
 
 #$(REFNAME)_%.gbk:
 $(TABLEDIR)/$(REFNAME)_%.gbk:
@@ -85,7 +84,7 @@ $(TABLEDIR)/$(REFNAME)_db: $(ClustersDatabase)
 		`find $(ClustersDatabase) -name '*gbk' | awk '{print $$0}' ORS=' '`
 
 
-Run_multigeneBLAST: $(TABLE2_1) $(TABLEDIR)/$(REFNAME)_db
+$(MBGDIR)/$(REFNAME)_001_1_A: $(TABLE2_1) $(TABLEDIR)/$(REFNAME)_db
 
 	# F. Running multigeneBLAST:
 
