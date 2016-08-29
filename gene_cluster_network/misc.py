@@ -1,6 +1,7 @@
 
 import os
 import re
+import time
 
 from Bio import Entrez
 
@@ -158,18 +159,31 @@ class antiSMASH_file(object):
 def efetch_hit(term, seq_start, seq_stop):
     """ Fetch the relevant part of a hit
     """
-    Entrez.email = "castelao@gmail.com"
+    db = "nucleotide"
 
-    handle = Entrez.esearch(db="nucleotide", term=term)
-    record = Entrez.read(handle)
+    maxtry = 3
+    ntry = -1
+    downloaded = False
 
-    assert len(record['IdList']) == 1, \
-            "Sorry, I'm not ready to handle more than one record"
+    while ~downloaded and (ntry <= maxtry):
+        ntry += 1
+        try:
+            handle = Entrez.esearch(db=db, term=term)
+            record = Entrez.read(handle)
 
-    handle = Entrez.efetch(db="nucleotide", rettype="gb", retmode="text",
-            id=record['IdList'][0],
-            seq_start=seq_start, seq_stop=seq_stop)
-    content = handle.read()
+            assert len(record['IdList']) == 1, \
+                    "Sorry, I'm not ready to handle more than one record"
+
+            handle = Entrez.efetch(db=db, rettype="gb", retmode="text",
+                    id=record['IdList'][0],
+                    seq_start=seq_start, seq_stop=seq_stop)
+            content = handle.read()
+            downloaded = True
+        except:
+            nap = ntry*3
+            print "Fail to download (term). I'll take a nap of %s seconds ", \
+                    " and try again."
+            time.sleep(ntry*3)
 
     return content
 
@@ -183,14 +197,25 @@ def download_hits(filename, output_path):
         for cluster in c['SignificantHits'][hit]:
             table_genes = c['SignificantHits'][hit][cluster]['TableGenes']
 
-            content = efetch_hit(
-                    term=hit,
-                    seq_start = min(table_genes['location_start']),
-                    seq_stop = max(table_genes['location_end']))
-
             filename_out = os.path.join(
                     output_path,
-                    "%s_%s.gbk" % (hit, cluster))
-            print "Saving %s" % filename_out
-            with open(filename_out, 'w') as f:
-                f.write(content)
+                    "%s_%s_%s-%s.gbk" % (hit, cluster,
+                        min(table_genes['location_start']),
+                        max(table_genes['location_end'])))
+
+            if os.path.isfile(filename_out):
+                print "Already downloaded %s" % filename_out
+            else:
+                print "Requesting hit: %s, start: %s, end: %s" % (
+                        hit,
+                        min(table_genes['location_start']),
+                        max(table_genes['location_end']))
+
+                content = efetch_hit(
+                    term=hit,
+                    seq_start=min(table_genes['location_start']),
+                    seq_stop=max(table_genes['location_end']))
+
+                print "Saving %s" % filename_out
+                with open(filename_out, 'w') as f:
+                    f.write(content)
