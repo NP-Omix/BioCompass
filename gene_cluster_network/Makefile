@@ -157,7 +157,6 @@ Run_multigeneBLAST: $(TABLE2_1) $(TABLEDIR)/$(REFNAME)_db
 	    for j in $$(seq 1 $${nclusters}); \
 	        do echo "j: "$$j; \
 	        table2=${TABLEDIR}/${REFNAME}_$${n}_table2_$${j}.csv; \
-		echo $$j; \
 		while IFS= read -r line; \
 		    do case "$$line" in 'BGC'*) continue ;; esac; \
 		    genes=`echo $$line | awk '{print $$4}'`; \
