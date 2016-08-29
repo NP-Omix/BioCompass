@@ -146,7 +146,7 @@ Run_multigeneBLAST: $(TABLE2_1) $(TABLEDIR)/$(REFNAME)_db
 	#
 	#mv mgb_result ../outputs/
 
-	mkdir -p ${OUTPUTDIR}/mgb_result
+	mkdir -p $(MBGDIR)
 
 	num=`echo $(GBK_INPUT_LIST) | wc -w`; \
 	for i in $$(seq 1 $$num); \
@@ -167,7 +167,7 @@ Run_multigeneBLAST: $(TABLE2_1) $(TABLEDIR)/$(REFNAME)_db
 		        -in ${TABLEDIR}/${REFNAME}_$${n}.gbk \
 			-hitspergene 50 -minseqcov 80 -minpercid 50 \
 			-genes $${genes} \
-			-out ${OUTPUTDIR}/mgb_result/${REFNAME}_$${n}_$${j}_$${sub}; \
+			-out $(MBGDIR)/${REFNAME}_$${n}_$${j}_$${sub}; \
 	            done < $$table2; \
 	        done; \
 	    done
