@@ -314,3 +314,6 @@ step_H: step_G
 #legacy:
 #	./run_bgcnet.sh
 
+clean:
+	-rm -r $(TABLEDIR)
+	-rm -r $(OUTPUTDIR)
