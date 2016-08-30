@@ -61,6 +61,7 @@ $(TABLEDIR)/$(REFNAME)_%_table2_1.csv: $(TABLEDIR)/$(REFNAME)_%.gbk
 
 $(ClustersDatabase):
 	# Update BioCompass if required
+	cd ../; \
 	python setup.py install
 
 	mkdir -p $@
