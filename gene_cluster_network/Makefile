@@ -84,7 +84,8 @@ $(TABLEDIR)/$(REFNAME)_db: $(ClustersDatabase)
 
 	mkdir -p `dirname $@`
 	export PATH="$(PATH):$(MULTIGENEBLASTDIR)"; \
-	python $(MAKEDB) $@ \
+	cd `dirname $@`; \
+	python $(MAKEDB) `basename $@` \
 		`find $(ClustersDatabase) -name '*gbk' | awk '{print $$0}' ORS=' '`
 
 
