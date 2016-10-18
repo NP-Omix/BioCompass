@@ -81,6 +81,8 @@ $(TABLEDIR)/$(REFNAME)_db: $(ClustersDatabase)
 	# python makedb.py $1_db $command
 	#
 	# rm subjects.txt
+	#
+	# makedb.py PAL_db
 
 	mkdir -p `dirname $@`
 	export PATH="$(PATH):$(MULTIGENEBLASTDIR)"; \
