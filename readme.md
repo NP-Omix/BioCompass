@@ -1,4 +1,0 @@
-# BioCompass
-
-## What is BioCompass
-
