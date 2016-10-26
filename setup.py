@@ -17,7 +17,7 @@ test_requirements = [
 ]
 
 setup(
-    name='gene_cluster_network',
+    name='BioCompass',
     version='0.3.0',
     description="Python package for gene clustering",
     long_description=readme + '\n\n' + history,
