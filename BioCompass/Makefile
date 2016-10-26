@@ -81,6 +81,8 @@ $(TABLEDIR)/$(REFNAME)_db: $(ClustersDatabase)
 	# python makedb.py $1_db $command
 	#
 	# rm subjects.txt
+	#
+	# makedb.py PAL_db
 
 	mkdir -p `dirname $@`
 	export PATH="$(PATH):$(MULTIGENEBLASTDIR)"; \
@@ -152,6 +154,9 @@ $(MBGDIR)/$(REFNAME)_001_1_A: $(TABLE2_1) $(TABLEDIR)/$(REFNAME)_db
 
 	mkdir -p $(MBGDIR)
 
+	cp $(TABLEDIR)/$(REFNAME)_db* $(MULTIGENEBLASTDIR)/
+
+	cd $(MULTIGENEBLASTDIR); \
 	num=`echo $(GBK_INPUT_LIST) | wc -w`; \
 	for i in $$(seq 1 $$num); \
 	    do n=`printf "%03d\n" $$i`; \
