@@ -1,6 +1,6 @@
 {
   "name": "Biocompass",
   "tagline": "A genome-guided secondary metabolite discovery",
-  "body": "### Welcome to BioCompass website.\r\n\r\nBioCompass is a Python package ...\r\n\r\n\r\n### Authors and Contributors\r\nYou can mention @tiagolbiotech or @castelao to generate a link to our profiles.\r\n\r\n### Documentation\r\n\r\nCheck our [documentation](http://biocompass.readthedocs.io/en/latest/) or our manuscript Leão et. al. 2016 (submitted).\r\n",
+  "body": "### Welcome to BioCompass website.\r\n\r\nBioCompass is a Python package ...\r\n\r\n\r\n### Authors and Contributors\r\nYou can mention @tiagolbiotech or @castelao to generate a link to our profiles.\r\n\r\n### Documentation\r\n\r\nCheck our [documentation](http://biocompass.readthedocs.io/en/latest/)\r\n",
   "note": "Don't delete this file! It's used internally to help with page regeneration."
 }
