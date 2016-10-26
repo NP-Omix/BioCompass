@@ -18,27 +18,27 @@ test_requirements = [
 
 setup(
     name='BioCompass',
-    version='0.3.0',
+    version='0.4.0',
     description="Python package for gene clustering",
     long_description=readme + '\n\n' + history,
     author="Tiago Leão, Gui Castelão",
     author_email='tferreir@ucsd.edu, guilherme@castelao.net',
-    url='https://github.com/castelao/gene_cluster_network',
+    url='https://github.com/NP-Omix/BioCompass',
     packages=[
-        'gene_cluster_network',
+        'BioCompass',
     ],
-    package_dir={'gene_cluster_network':
-                 'gene_cluster_network'},
+    package_dir={'BioCompass':
+                 'BioCompass'},
     entry_points={
         'console_scripts': [
-            'gene_cluster_network=gene_cluster_network.cli:main'
+            'BioCompass=BioCompass.cli:main'
         ]
     },
     include_package_data=True,
     install_requires=requirements,
     license="BSD license",
     zip_safe=False,
-    keywords='gene_cluster_network',
+    keywords='BioCompass',
     classifiers=[
         'Development Status :: 2 - Pre-Alpha',
         'Intended Audience :: Developers',
