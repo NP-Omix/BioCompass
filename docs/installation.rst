@@ -44,6 +44,8 @@ Once you have a copy of the source, you can install it with:
 
 .. code-block:: console
 
+    $ cd BioCompass/
+    
     $ python setup.py install
 
 
