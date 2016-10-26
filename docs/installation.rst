@@ -12,7 +12,7 @@ To install Gene Cluster Network, run this command in your terminal:
 
 .. code-block:: console
 
-    $ pip install gene_cluster_network
+    $ pip install BioCompass
 
 This is the preferred method to install Gene Cluster Network, as it will always install the most recent stable release. 
 
@@ -32,13 +32,13 @@ You can either clone the public repository:
 
 .. code-block:: console
 
-    $ git clone git://github.com/castelao/gene_cluster_network
+    $ git clone git://github.com/castelao/BioCompass
 
 Or download the `tarball`_:
 
 .. code-block:: console
 
-    $ curl  -OL https://github.com/castelao/gene_cluster_network/tarball/master
+    $ curl  -OL https://github.com/castelao/BioCompass/tarball/master
 
 Once you have a copy of the source, you can install it with:
 
@@ -47,5 +47,5 @@ Once you have a copy of the source, you can install it with:
     $ python setup.py install
 
 
-.. _Github repo: https://github.com/castelao/gene_cluster_network
-.. _tarball: https://github.com/castelao/gene_cluster_network/tarball/master
+.. _Github repo: https://github.com/castelao/BioCompass
+.. _tarball: https://github.com/castelao/BioCompass/tarball/master
