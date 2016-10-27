@@ -7,7 +7,7 @@ REFNAME = PAL
 
 ROOT=$(shell cd ../; pwd)
 
-SRC=$(ROOT)/gene_cluster_network
+SRC=$(ROOT)/BioCompass
 INPUTDIR=$(ROOT)/antiSMASH_input
 MULTIGENEBLASTDIR=$(ROOT)/multigeneblast
 OUTPUTDIR=$(ROOT)/outputs
@@ -66,7 +66,7 @@ $(ClustersDatabase):
 
 	mkdir -p $@
 	for file in $(CLUSTER_LIST); \
-		do BioCompass $$file $@; \
+		do BioCompass --outputdir $@ $$file; \
 		done
 
 $(TABLEDIR)/$(REFNAME)_db: $(ClustersDatabase)
