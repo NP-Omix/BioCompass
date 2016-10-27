@@ -54,5 +54,4 @@ setup(
     ],
     test_suite='tests',
     tests_require=test_requirements,
-    scripts=["bin/BioCompass"],
 )
