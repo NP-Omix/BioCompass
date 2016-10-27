@@ -8,13 +8,13 @@ Installation
 Stable release
 --------------
 
-To install Gene Cluster Network, run this command in your terminal:
+To install BioCompass, run this command in your terminal:
 
 .. code-block:: console
 
     $ pip install BioCompass
 
-This is the preferred method to install Gene Cluster Network, as it will always install the most recent stable release. 
+This is the preferred method to install BioCompass, as it will always install the most recent stable release. 
 
 If you don't have `pip`_ installed, this `Python installation guide`_ can guide
 you through the process.
@@ -26,7 +26,7 @@ you through the process.
 From sources
 ------------
 
-The sources for Gene Cluster Network can be downloaded from the `Github repo`_.
+The sources for BioCompass can be downloaded from the `Github repo`_.
 
 You can either clone the public repository:
 
