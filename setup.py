@@ -18,7 +18,7 @@ test_requirements = [
 
 setup(
     name='BioCompass',
-    version='0.5.0',
+    version='0.6.0',
     description="Python package for gene clustering",
     long_description=readme + '\n\n' + history,
     author="Tiago Leão, Gui Castelão",
@@ -54,5 +54,4 @@ setup(
     ],
     test_suite='tests',
     tests_require=test_requirements,
-    scripts=["bin/BioCompass"],
 )
