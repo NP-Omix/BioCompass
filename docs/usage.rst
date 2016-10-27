@@ -2,6 +2,6 @@
 Usage
 =====
 
-To use Gene Cluster Network in a project::
+To use BioCompass in a project::
 
-    import gene_cluster_network
+    import BioCompass

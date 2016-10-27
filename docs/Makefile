@@ -85,17 +85,17 @@ qthelp:
 	@echo
 	@echo "Build finished; now you can run "qcollectiongenerator" with the" \
 	      ".qhcp project file in $(BUILDDIR)/qthelp, like this:"
-	@echo "# qcollectiongenerator $(BUILDDIR)/qthelp/gene_cluster_network.qhcp"
+	@echo "# qcollectiongenerator $(BUILDDIR)/qthelp/BioCompass.qhcp"
 	@echo "To view the help file:"
-	@echo "# assistant -collectionFile $(BUILDDIR)/qthelp/gene_cluster_network.qhc"
+	@echo "# assistant -collectionFile $(BUILDDIR)/qthelp/BioCompass.qhc"
 
 devhelp:
 	$(SPHINXBUILD) -b devhelp $(ALLSPHINXOPTS) $(BUILDDIR)/devhelp
 	@echo
 	@echo "Build finished."
 	@echo "To view the help file:"
-	@echo "# mkdir -p $$HOME/.local/share/devhelp/gene_cluster_network"
-	@echo "# ln -s $(BUILDDIR)/devhelp $$HOME/.local/share/devhelp/gene_cluster_network"
+	@echo "# mkdir -p $$HOME/.local/share/devhelp/BioCompass"
+	@echo "# ln -s $(BUILDDIR)/devhelp $$HOME/.local/share/devhelp/BioCompass"
 	@echo "# devhelp"
 
 epub:

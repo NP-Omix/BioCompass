@@ -1,0 +1,24 @@
+#!/usr/bin/env python
+
+import os
+from optparse import OptionParser
+
+from gene_cluster_network.misc import download_hits
+
+# ============================================================================
+# ==== Parsing the options on command line
+parser = OptionParser()
+
+#parser.add_option("--output", dest="output_dir",
+#        help="Directory to save output", metavar="OUTPUT_DIR")
+
+(options, args) = parser.parse_args()
+# ============================================================================
+
+assert os.path.isfile(args[0]), \
+        "%s is not a valid file" % args[0]
+
+assert os.path.isdir(args[1]), \
+        "%s is not a valid output directory" % args[1]
+
+download_hits(args[0], args[1])
