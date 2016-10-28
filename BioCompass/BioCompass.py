@@ -3,6 +3,8 @@ import os
 import re
 import time
 
+import pandas as pd
+from Bio import SeqIO
 from Bio import Entrez
 
 Entrez.email = "testing@ucsd.edu"
@@ -219,3 +221,33 @@ def download_hits(filename, output_path):
                 print "Saving %s" % filename_out
                 with open(filename_out, 'w') as f:
                     f.write(content)
+
+
+#def gbk2tablegen(gb_file, strain_id=None):
+#def cds_from_gbk(gb_file, strain_id=None):
+def cds_from_gbk(gb_file):
+    gb_record = SeqIO.read(open(gb_file,"rU"), "genbank")
+
+    #if strain_id is not None:
+    #    gb_record.id = strain_id
+
+    output = pd.DataFrame()
+    for feature in gb_record.features:
+        if feature.type == "CDS":
+            tmp = {}
+            tmp = {'BGC': gb_record.id,
+                    'locus_tag': feature.qualifiers['locus_tag'][0],
+                    'start': feature.location.start.position,
+                    'stop': feature.location.end.position,
+                    'strand': feature.location.strand}
+            if 'note' in feature.qualifiers:
+                for note in feature.qualifiers['note']:
+                    product = re.search( r"""smCOG: \s (?P<product>.*?) \s+ \(Score: \s* (?P<score>.*); \s* E-value: \s (?P<e_value>.*?)\);""", note, re.VERBOSE)
+                    if product is not None:
+                        product = product.groupdict()
+                        product['score'] = float(product['score'])
+                        product['e_value'] = float(product['e_value'])
+                        for p in product:
+                            tmp[p] = product[p]
+            output = output.append(pd.Series(tmp), ignore_index=True)
+    return output
