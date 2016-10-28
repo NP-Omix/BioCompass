@@ -2,7 +2,7 @@
 
 import click
 
-from BioCompass.misc import download_hits
+from BioCompass.BioCompass import download_hits
 
 @click.command()
 @click.option('--outputdir', default='./', type=click.Path(exists=True),
