@@ -251,3 +251,17 @@ def cds_from_gbk(gb_file):
                             tmp[p] = product[p]
             output = output.append(pd.Series(tmp), ignore_index=True)
     return output
+
+
+def find_category_from_product(df):
+    subcluster = json.load(open('subcluster_dictionary.json'))
+    def get_category(product):
+        for s in subcluster:
+            if re.search(s, product):
+                return subcluster[s]
+        return 'hypothetical'
+
+    idx = df['product'].notnull()
+    df['category'] = df.loc[idx, 'product'].apply(get_category)
+    df['category'].fillna('hypothetical', inplace=True)
+    return df
