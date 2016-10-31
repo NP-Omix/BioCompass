@@ -39,27 +39,9 @@ PS2: The running time at an average laptop (e.g. MacBook Pro 2.6 GHz Intel Core 
 Using BioCompass in your queried genome at `Amazon Web Service <https://aws.amazon.com>`_
 ####
 
-We expect that tutorial above would work at your machine, but in case it doesn't, we can garantee that it will work on AWS if followed the instructions in this topic. The instructions for running BioCompass at AWS are very similar than explained in the tutorial above, although requires the following setup first.
+We expect that the tutorial above would work at your machine, but in case it doesn't, we can garantee that it will work on AWS if followed the instructions below. The instructions for running BioCompass at AWS are very similar than explained in the tutorial above, although requires the following setup first.
 
-A. Start an Amazon Web Services EC2 computer following the tutorial `here <http://2016-metagenomics-sio.readthedocs.io/en/latest/aws/boot.html>`_
-
-B. Log into your instance following the instructions `here <http://2016-metagenomics-sio.readthedocs.io/en/latest/aws/login-shell.html>`_
-
-C. Once logged into your AWS computer, install BioCompass running the following command::
-
-    git clone git://github.com/NP-Omix/BioCompass
-    sudo apt-get install gcc
-    curl https://bootstrap.pypa.io/get-pip.py | sudo python #acquires most updated version of pip
-    sudo apt-get install python-dev #to install missing python headers
-    sudo pip install BioCompass
-    sudo apt-get install python python-tk idle python-pmw python-imaging
-
-D. Upon successful instalation, follow steps 1 to 3 from the tutorial above to generate the antiSMASH and multigeneBLAST folders. Open a new terminal window and Copy the folders from your machine into your AWS instance using the command::
-
-    scp -r -i ~/Downloads/amazon-key.pem path/to/antiSMASH_input/ ubuntu@MACHINE_NAE:/home/
-    scp -r -i ~/Downloads/amazon-key.pem path/to/multigeneBLAST_1.1.14_macosx_commandline/ ubuntu@MACHINE_NAE:/home/
-
-E. Follow steps 1 to 3 from the tutorial above to conclude your analysis.
+(Tutorial under construction)
 
 Using BioCompass in your project
 ####
