@@ -2,8 +2,7 @@
 Usage
 =====
 
-The current version of BioCompass can network the gene cluster from ONE strain/genome against the gene cluster at `NCBI/GenBank <https://www.ncbi.nlm.nih.gov/genbank/>`_ and `MIBiG databases <http://mibig.secondarymetabolites.org>`_. Future Implementations will provide the option to analyze multiple strains.
-
+The current version of BioCompass can network the gene clusters from ONE strain/genome against the gene clusters from `NCBI/GenBank <https://www.ncbi.nlm.nih.gov/genbank/>`_ and `MIBiG databases <http://mibig.secondarymetabolites.org>`_. Future Implementations will provide the option to analyze multiple strains.
 
 Using BioCompass in your queried genome
 ####
