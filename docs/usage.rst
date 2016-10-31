@@ -52,6 +52,7 @@ C. Once logged into your AWS computer, install BioCompass running the following 
     curl https://bootstrap.pypa.io/get-pip.py | sudo python #acquires most updated version of pip
     sudo apt-get install python-dev #to install missing python headers
     sudo pip install BioCompass
+    sudo apt-get install python python-tk idle python-pmw python-imaging
 
 D. Upon successful instalation, follow steps 1 to 3 from the tutorial above to generate the antiSMASH and multigeneBLAST folders. Open a new terminal window and Copy the folders from your machine into your AWS instance using the command::
 
