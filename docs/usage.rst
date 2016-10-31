@@ -27,7 +27,12 @@ For the example using Moorea producens PAL 15AUG08-1, assuming that both antiSMA
 
 PS: the folder name inside antiSMASH_input and the REFNAME must be the same!
 
-5. The table outputs (REFNAME_edges.txt and REFNAME_nodes.txt) can be vizualized as a network diagram using `Cytoscape 3.2.1 <http://www.cytoscape.org/download.php>`_, according to the tutorial here (tutorial under construction!)
+5. Select the cutoff you would like to use for filtering your results. We advise using a low cutoff first, checking the network diagram and then revisiting this step using the code (only rerun this step, not the whole pipeline) below to better define a good cutoff for your data.::
+    
+    make ???
+
+
+6. The table outputs (REFNAME_edges.txt and REFNAME_nodes.txt) can be vizualized as a network diagram using `Cytoscape 3.2.1 <http://www.cytoscape.org/download.php>`_, according to the tutorial here (tutorial under construction!)
 
 Using BioCompass in your project
 ####
