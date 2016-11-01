@@ -60,10 +60,6 @@ $(TABLEDIR)/$(REFNAME)_%_table2_1.csv: $(TABLEDIR)/$(REFNAME)_%.gbk
 	cd $(TABLEDIR); python $(SRC)/subcluster_gen.py $(REFNAME)_$*
 
 $(ClustersDatabase):
-	# Update BioCompass if required
-	cd ../; \
-	python setup.py install
-
 	mkdir -p $@
 	for file in $(CLUSTER_LIST); \
 		do BioCompass download-hits --outputdir $@ $$file; \
