@@ -13,6 +13,12 @@ BioCompass
         :target: https://biocompass.readthedocs.io/en/latest/?badge=latest
         :alt: Documentation Status
 
+.. image:: https://img.shields.io/travis/castelao/BioCompass.svg
+        :target: https://travis-ci.org/castelao/BioCompass
+
+.. image:: https://codecov.io/gh/castelao/BioCompass/branch/master/graph/badge.svg
+        :target: https://codecov.io/gh/castelao/BioCompass
+
 
 Python package for gene clustering
 
