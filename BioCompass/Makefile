@@ -66,7 +66,7 @@ $(ClustersDatabase):
 
 	mkdir -p $@
 	for file in $(CLUSTER_LIST); \
-		do BioCompass --outputdir $@ $$file; \
+		do BioCompass download-hits --outputdir $@ $$file; \
 		done
 
 $(TABLEDIR)/$(REFNAME)_db: $(ClustersDatabase)
