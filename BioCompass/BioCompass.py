@@ -2,6 +2,7 @@
 import os
 import re
 import time
+import json
 
 import pandas as pd
 from Bio import SeqIO
