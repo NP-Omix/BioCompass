@@ -43,7 +43,6 @@ ALL:
 	$(MAKE) $(MBGDIR)/$(REFNAME)_001_1_A
 	$(MAKE) step_H
 
-#$(REFNAME)_%.gbk:
 $(TABLEDIR)/$(REFNAME)_%.gbk:
 	mkdir -p `dirname $@`
 	# B. Building table 1
