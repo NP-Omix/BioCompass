@@ -3,6 +3,7 @@ import os
 import re
 import time
 import json
+from collections import OrderedDict
 
 import pandas as pd
 from Bio import SeqIO
@@ -71,12 +72,12 @@ def parse_antiSMASH(content):
         output['QueryCluster']['annotation'].append(row.group(5))
 
     #output['SignificantHits'] = {'id': [], 'name': [], 'description': []}
-    output['SignificantHits'] = {}
+    output['SignificantHits'] = OrderedDict()
     for row in re.finditer(r"""(?P<id>\d+) \. \ (?P<locus>\w+)_(?P<cluster>\w+) \t (?P<description>.*) \n+""", parsed['SignificantHits'], re.VERBOSE):
         hit = row.groupdict()
 
         if hit['locus'] not in output['SignificantHits']:
-            output['SignificantHits'][hit['locus']] = {}
+            output['SignificantHits'][hit['locus']] = OrderedDict()
 
         if hit['cluster'] not in output['SignificantHits'][hit['locus']]:
             output['SignificantHits'][hit['locus']][hit['cluster']] = {}
