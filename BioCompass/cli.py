@@ -2,7 +2,7 @@
 
 import click
 
-from BioCompass.BioCompass import download_hits
+from .BioCompass import download_hits
 
 @click.group()
 def main():
