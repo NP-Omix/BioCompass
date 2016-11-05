@@ -47,7 +47,7 @@ $(TABLEDIR)/$(REFNAME)_%.gbk:
 	mkdir -p `dirname $@`
 	# B. Building table 1
 	# python table_1_gen.py ../antiSMASH_input/PAL/c00001_Moorea_...cluster001.gbk PAL_001
-	python table_1_gen.py $(INPUTDIR)/$(REFNAME)/c00001_Moorea_...cluster$*.gbk $(TABLEDIR)/$(REFNAME)_$*
+	python table_1_gen.py $(INPUTDIR)/$(REFNAME)/*cluster$*.gbk $(TABLEDIR)/$(REFNAME)_$*
 	# python category_gen.py PAL_001
 	python category_gen.py $(TABLEDIR)/$(REFNAME)_$*
 	# C. Extending table_1 with best hits
