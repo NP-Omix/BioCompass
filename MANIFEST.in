@@ -4,6 +4,8 @@ include HISTORY.rst
 include LICENSE
 include README.rst
 
+include BioCompass/subcluster_dictionary.json
+
 include requirements.txt
 
 recursive-include tests *
