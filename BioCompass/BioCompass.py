@@ -226,6 +226,29 @@ def download_hits(filename, output_path):
                     f.write(content)
 
 
+import urlparse
+import urllib2
+import tempfile
+import tarfile
+def download_mibig(outputdir, version='1.3'):
+    """ Download and extract MIBiG files into outputdir
+    """
+    assert version in ['1.0', '1.1', '1.2', '1.3'], \
+            "Invalid version of MIBiG"
+
+    server = 'http://mibig.secondarymetabolites.org'
+    filename = "mibig_gbk_%s.tar.gz" % version
+    url = urlparse.urljoin(server, filename)
+
+    with tempfile.NamedTemporaryFile(delete=True) as f:
+        u = urllib2.urlopen(url)
+        f.write(u.read())
+        f.file.flush()
+        tar = tarfile.open(f.name)
+        tar.extractall(path=outputdir)
+        tar.close()
+
+
 #def gbk2tablegen(gb_file, strain_id=None):
 #def cds_from_gbk(gb_file, strain_id=None):
 def cds_from_gbk(gb_file):
