@@ -20,13 +20,65 @@ def parse_antiSMASH(content):
     """ Parse antiSMASH output
     """
 
+    rule_table_genes = r"""
+        (?P<subject_gene> \w+ \"?) \t
+        \w+ \t
+        (?P<location_start> \d+) \t
+        (?P<location_end> \d+) \t
+        (?P<strands> [+|-]) \t
+        (?P<product> .*) \n
+        """
+
+    rule_table_blasthit = r"""
+        (?P<query_gene> \w+ )\"? \t
+        (?P<subject_gene> \w+ )\"? \t
+        (?P<identity> \d+) \t
+        (?P<blast_score> \d+) \t
+        (?P<coverage> \d+(?:\.\d+)?) \t
+        (?P<evalue> \d+\.\d+e[+|-]\d+) \t
+        \n
+        """
+
+    rule_query_cluster = r"""
+        (?P<query_gene> \w+) \s+
+        (?P<location_start> \d+) \s
+        (?P<location_end> \d+) \s
+        (?P<strands> [+|-]) \s
+        (?P<product> \w+ (?:\s \w+)?) \s* \n+
+        """
+
+    rule_detail = r"""
+        >>\n
+        (?P<id>\d+) \. \s+
+            (?P<cluster_subject> (?P<locus>\w+)_(?P<cluster>\w+)) \n
+        Source: \s+ (?P<source>.+?) \s* \n
+        Type: \s+ (?P<type>.+) \s* \n
+        Number\ of\ proteins\ with\ BLAST\ hits\ to\ this\ cluster:\ (?P<n_hits> \d+ ) \n
+        Cumulative\ BLAST\ score:\ (?P<cum_BLAST_score> \d+ )
+        \n \n
+        Table\ of\ genes,\ locations,\ strands\ and\ annotations\ of\ subject\ cluster:\n
+        (?P<TableGenes>
+            (
+            """ + untag(rule_table_genes) + r"""
+            )+
+        )
+        \n
+        Table\ of\ Blast\ hits\ \(query\ gene,\ subject\ gene,\ %identity,\ blast\ score,\ %coverage,\ e-value\): \n
+        (?P<BlastHit>
+            (\w+ \t \w+ \"? \t \d+ \t \d+ \t \d+\.\d+ \t \d+\.\d+e[+|-]\d+ \t \n)+
+        )
+        \n+
+        """
+
     rule = r"""
         ^
         ClusterBlast\ scores\ for\ (?P<target>.*)\n+
         Table\ of\ genes,\ locations,\ strands\ and\ annotations\ of\ query\ cluster:\n+
         (?P<QueryCluster>
-          (\w+ \s+ \d+ \s \d+ \s [+|-] \s \w+ (\s+\w+)?\s*\n+)+
-          )
+            (
+            """ + untag(rule_query_cluster) + r"""
+            )+
+        )
         \n \n+
         Significant \  hits:\ \n
         (?P<SignificantHits>
@@ -36,46 +88,32 @@ def parse_antiSMASH(content):
         (?P<Details>
           Details:\n\n
           (
-            >>\n
-            \d+ \. .+ \n
-            Source:\ .+ \n
-            Type:\ .+ \n
-            Number\ of\ proteins\ with\ BLAST\ hits\ to\ this\ cluster:\ \d+ \n
-            Cumulative\ BLAST\ score:\ \d+
-            \n \n
-            Table\ of\ genes,\ locations,\ strands\ and\ annotations\ of\ subject\ cluster:\n
-            (?P<TableGenes>
-              (\w+ \"? \t \w+ \t \d+ \t \d+ \t [+|-] \t .* \n)+
-              )
-            \n
-            Table\ of\ Blast\ hits\ \(query\ gene,\ subject\ gene,\ %identity,\ blast\ score,\ %coverage,\ e-value\): \n
-            (?P<BlastHit>
-              (\w+ \t \w+ \"? \t \d+ \t \d+ \t \d+\.\d+ \t \d+\.\d+e[+|-]\d+ \t \n)+
-              )
-            \n+
-            )+
-          )
-          \n*
-          $
-    """
-
+            """ + untag(rule_detail) + r"""
+          )+
+        )
+        \n*
+        $
+        """
     parsed = re.search(rule, content, re.VERBOSE).groupdict()
 
     output = {}
+    for k in ['target', 'QueryCluster', 'SignificantHits']:
+        output[k] = parsed[k]
 
-    output['target'] = parsed['target']
 
-    output['QueryCluster'] = {'TableGenes': [], 'location_start': [],
-            'location_end': [], 'strands': [], 
-            'annotation': []}
-    for row in re.finditer(r"""(\w+) \s+ (\d+) \s (\d+) \s ([+|-]) \s (\w+ (?:\s \w+)?) \s* \n+""", parsed['QueryCluster'], re.VERBOSE):
-        output['QueryCluster']['TableGenes'].append(row.group(1))
-        output['QueryCluster']['location_start'].append(int(row.group(2)))
-        output['QueryCluster']['location_end'].append(int(row.group(3)))
-        output['QueryCluster']['strands'].append(row.group(4))
-        output['QueryCluster']['annotation'].append(row.group(5))
+    QueryCluster = OrderedDict()
+    for k in re.search(
+            rule_query_cluster, parsed['QueryCluster'],
+            re.VERBOSE).groupdict().keys():
+        QueryCluster[k] = []
+    for row in re.finditer(
+            rule_query_cluster, parsed['QueryCluster'], re.VERBOSE):
+        row = row.groupdict()
+        for k in row:
+            QueryCluster[k].append(row[k])
+    output['QueryCluster'] = QueryCluster
 
-    #output['SignificantHits'] = {'id': [], 'name': [], 'description': []}
+
     output['SignificantHits'] = OrderedDict()
     for row in re.finditer(r"""(?P<id>\d+) \. \ (?P<locus>\w+)_(?P<cluster>\w+) \t (?P<description>.*) \n+""", parsed['SignificantHits'], re.VERBOSE):
         hit = row.groupdict()
@@ -89,56 +127,30 @@ def parse_antiSMASH(content):
         for v in ['id', 'description']:
             output['SignificantHits'][hit['locus']][hit['cluster']][v] = hit[v]
 
-    for block in re.finditer(r"""
-            >>\n
-            (?P<id>\d+) \. \ (?P<locus>\w+)_(?P<cluster>\w+) \n
-            Source:\ (?P<source>.+) \n
-            Type:\ (?P<type>.+) \n
-            Number\ of\ proteins\ with\ BLAST\ hits\ to\ this\ cluster:\ \d+ \n
-            Cumulative\ BLAST\ score:\ \d+
-            \n \n
-            Table\ of\ genes,\ locations,\ strands\ and\ annotations\ of\ subject\ cluster:\n
-            (?P<TableGenes>
-              (\w+ \"? \t \w+ \t \d+ \t \d+ \t [+|-] \t .* \n)+
-              )
-            \n
-            Table\ of\ Blast\ hits\ \(query\ gene,\ subject\ gene,\ %identity,\ blast\ score,\ %coverage,\ e-value\): \n
-            (?P<BlastHit>
-              (\w+ \t \w+ \"? \t \d+ \t \d+ \t \d+\.\d+ \t \d+\.\d+e[+|-]\d+ \t \n)+
-              )
-            \n+
-""", parsed['Details'], re.VERBOSE):
-        #block = block.groupdict()
+    for block in re.finditer(rule_detail, parsed['Details'], re.VERBOSE):
+        block = dict(block.groupdict())
 
-        tmp = {'TableGenes': {}, 'TableBlast': {}}
+        content = block['TableGenes']
+        block['TableGenes'] = OrderedDict()
+        for k in re.findall('\(\?P<(.*?)>', rule_table_genes):
+            block['TableGenes'][k] = []
+        for row in re.finditer(rule_table_genes, content, re.VERBOSE):
+            row = row.groupdict()
+            for k in row:
+                block['TableGenes'][k].append(row[k])
 
-        tmp = {
-            'TableGenes': [], 'block': [], 'location_start': [],
-            'location_end': [], 'strands': [], 'annotation': []}
-        for row in re.finditer(r"""(\w+ \"?) \t (\w+) \t (\d+) \t (\d+) \t ([+|-]) \t (.*) \n""", block.groupdict()['TableGenes'], re.VERBOSE):
-            tmp['TableGenes'].append(row.group(1))
-            tmp['block'].append(row.group(2))
-            tmp['location_start'].append(int(row.group(3)))
-            tmp['location_end'].append(int(row.group(4)))
-            tmp['strands'].append(row.group(5))
-            tmp['annotation'].append(row.group(6))
+        content = block['BlastHit']
+        block['BlastHit'] = OrderedDict()
+        for k in re.findall('\(\?P<(.*?)>', rule_table_blasthit):
+            block['BlastHit'][k] = []
+        for row in re.finditer(rule_table_blasthit, content, re.VERBOSE):
+            row = row.groupdict()
+            for k in row:
+                block['BlastHit'][k].append(row[k])
 
-        output['SignificantHits'][block.groupdict()['locus']][block.groupdict()['cluster']]['TableGenes'] = \
-                tmp.copy()
-
-        tmp = {
-            'QueryGene': [], 'SubjectGene': [], 'Identity': [],
-            'BlastScore': [], 'Coverage': [], 'e-value': []}
-        for row in re.finditer(r"""(\w+) \t (\w+ \"?) \t (\d+) \t (\d+) \t (\d+(?:\.\d+)?) \t (\d+\.\d+e[+|-]\d+) \t \n""", block.groupdict()['BlastHit'], re.VERBOSE):
-            tmp['QueryGene'].append(row.group(1))
-            tmp['SubjectGene'].append(row.group(2))
-            tmp['Identity'].append(row.group(3))
-            tmp['BlastScore'].append(row.group(4))
-            tmp['Coverage'].append(row.group(5))
-            tmp['e-value'].append(row.group(6))
-
-        output['SignificantHits'][block.groupdict()['locus']][block.groupdict()['cluster']]['TableBlast'] = \
-                tmp.copy()
+        for k in block:
+            output['SignificantHits'][block['locus']][block['cluster']][k] = \
+                    block[k]
 
     return output
 
