@@ -18,7 +18,7 @@ def downloadHits(mgbfile, outputdir):
     """ Console script for BioCompass"""
     download_hits(mgbfile, outputdir)
 
-@main.command(name="download-mibig")
+@main.command(name="download-MIBiG")
 @click.option('--outputdir', default='./', type=click.Path(exists=True),
         help="Path to save the MIBig genbank files.")
 @click.option('--version', type=unicode, default='1.3',
