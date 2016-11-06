@@ -4,6 +4,7 @@ import re
 import time
 import json
 from collections import OrderedDict
+import pkg_resources
 
 import pandas as pd
 from Bio import SeqIO
