@@ -256,7 +256,9 @@ def cds_from_gbk(gb_file):
 
 
 def find_category_from_product(df):
-    subcluster = json.load(open('subcluster_dictionary.json'))
+    subcluster = json.loads(
+            pkg_resources.resource_string(
+                __name__, 'subcluster_dictionary.json'))
     def get_category(product):
         for s in subcluster:
             if re.search(s, product):
