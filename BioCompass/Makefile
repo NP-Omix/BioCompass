@@ -58,7 +58,11 @@ $(TABLEDIR)/$(REFNAME)_%_table2_1.csv: $(TABLEDIR)/$(REFNAME)_%.gbk
 	# D. Creating distance matrixes and running DBScan for subcluster divisions (table 2):
 	cd $(TABLEDIR); python $(SRC)/subcluster_gen.py $(REFNAME)_$*
 
-$(ClustersDatabase):
+$(ClustersDatabase)/MIBiG:
+	mkdir -p $@
+	BioCompass download-MIBiG --outputdir $@
+
+$(ClustersDatabase): $(ClustersDatabase)/MIBiG
 	mkdir -p $@
 	for file in $(CLUSTER_LIST); \
 		do BioCompass download-hits --outputdir $@ $$file; \
