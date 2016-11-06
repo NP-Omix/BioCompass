@@ -273,6 +273,7 @@ def cds_from_gbk(gb_file):
     #    gb_record.id = strain_id
 
     output = pd.DataFrame()
+    sign = lambda x: '+' if x > 0 else '-'
     for feature in gb_record.features:
         if feature.type == "CDS":
             tmp = {}
@@ -280,7 +281,7 @@ def cds_from_gbk(gb_file):
                     'locus_tag': feature.qualifiers['locus_tag'][0],
                     'start': feature.location.start.position,
                     'stop': feature.location.end.position,
-                    'strand': feature.location.strand}
+                    'strand': sign(feature.location.strand) }
             if 'note' in feature.qualifiers:
                 for note in feature.qualifiers['note']:
                     product = re.search( r"""smCOG: \s (?P<product>.*?) \s+ \(Score: \s* (?P<score>.*); \s* E-value: \s (?P<e_value>.*?)\);""", note, re.VERBOSE)
