@@ -17,7 +17,7 @@ def test_importcli():
 
 
 import pandas as pd
-from ..BioCompass import find_category_from_product
+from BioCompass.BioCompass import find_category_from_product
 def test_find_category_from_product():
     df = pd.DataFrame(
             {'product': ['permease', 'bla bla permease bla bla']})
