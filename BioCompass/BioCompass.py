@@ -13,6 +13,9 @@ from Bio import Entrez
 Entrez.email = "testing@ucsd.edu"
 
 
+def untag(rule):
+    return re.sub('\?P<.*?>', '', rule)
+
 def parse_antiSMASH(content):
     """ Parse antiSMASH output
     """
