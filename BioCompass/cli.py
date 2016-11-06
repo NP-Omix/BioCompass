@@ -15,7 +15,7 @@ def main():
 @click.argument('mgbfile', type=click.Path(exists=True))
         #help="Multigeneblast file containing NCBI references to be downloaded.")
 def downloadHits(mgbfile, outputdir):
-    """ Console script for BioCompass"""
+    """Download NCBI clusters listed t in multigeneblast file."""
     download_hits(mgbfile, outputdir)
 
 @main.command(name="download-MIBiG")
