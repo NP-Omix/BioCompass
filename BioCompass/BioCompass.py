@@ -115,17 +115,16 @@ def parse_antiSMASH(content):
 
 
     output['SignificantHits'] = OrderedDict()
-    for row in re.finditer(r"""(?P<id>\d+) \. \ (?P<locus>\w+)_(?P<cluster>\w+) \t (?P<description>.*) \n+""", parsed['SignificantHits'], re.VERBOSE):
+    for row in re.finditer(
+            r"""(?P<id>\d+) \. \ (?P<cluster_subject> (?P<locus>\w+)_(?P<locus_cluster>\w+)) \t (?P<description>.*) \n+""", parsed['SignificantHits'], re.VERBOSE):
         hit = row.groupdict()
+        cs = hit['cluster_subject']
 
-        if hit['locus'] not in output['SignificantHits']:
-            output['SignificantHits'][hit['locus']] = OrderedDict()
+        if cs not in output['SignificantHits']:
+            output['SignificantHits'][cs] = OrderedDict()
 
-        if hit['cluster'] not in output['SignificantHits'][hit['locus']]:
-            output['SignificantHits'][hit['locus']][hit['cluster']] = {}
-
-        for v in ['id', 'description']:
-            output['SignificantHits'][hit['locus']][hit['cluster']][v] = hit[v]
+        for v in ['id', 'description', 'locus', 'locus_cluster']:
+            output['SignificantHits'][cs][v] = hit[v]
 
     for block in re.finditer(rule_detail, parsed['Details'], re.VERBOSE):
         block = dict(block.groupdict())
@@ -149,8 +148,7 @@ def parse_antiSMASH(content):
                 block['BlastHit'][k].append(row[k])
 
         for k in block:
-            output['SignificantHits'][block['locus']][block['cluster']][k] = \
-                    block[k]
+            output['SignificantHits'][block['cluster_subject']][k] = block[k]
 
     return output
 
