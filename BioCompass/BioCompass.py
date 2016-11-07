@@ -331,19 +331,19 @@ def find_category_from_product(df):
     return df
 
 
-def get_hits(file_name):
-    """ Reproduces original Tiago's code: table_1_extender.py
+def get_hits(filename, criteria='cum_BLAST_score'):
+    """
+
+        Reproduces original Tiago's code: table_1_extender.py
 
         In the future allow different criteria. Right now it takes
           from the very first block, which has the highest Cumulative
           BLAST.
     """
-    cluster = antiSMASH_file(file_name)
-    SignificantHits = cluster['SignificantHits']
-    locus = SignificantHits[SignificantHits.keys()[0]]
-    c = locus[locus.keys()[0]]
-    TableGenes = pd.DataFrame(c['TableGenes'])
-    TableBlast = pd.DataFrame(c['TableBlast'])
-    TableGenes.rename(columns={'TableGenes': 'SubjectGene'}, inplace=True)
-    hit = pd.merge(TableBlast, TableGenes, how='left', on='SubjectGene')
-    return hit
+    with open(filename) as f:
+        df = antiSMASH_to_dataFrame(f.read())
+
+    df.dropna(subset=['query_gene'], inplace=True)
+    df.sort_values(by=criteria, ascending=False, na_position='last',
+            inplace=True)
+    return df.groupby('query_gene', as_index=False).first()
