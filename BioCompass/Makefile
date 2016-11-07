@@ -43,12 +43,11 @@ ALL:
 	$(MAKE) $(MBGDIR)/$(REFNAME)_001_1_A
 	$(MAKE) step_H
 
-#$(REFNAME)_%.gbk:
 $(TABLEDIR)/$(REFNAME)_%.gbk:
 	mkdir -p `dirname $@`
 	# B. Building table 1
 	# python table_1_gen.py ../antiSMASH_input/PAL/c00001_Moorea_...cluster001.gbk PAL_001
-	python table_1_gen.py $(INPUTDIR)/$(REFNAME)/c00001_Moorea_...cluster$*.gbk $(TABLEDIR)/$(REFNAME)_$*
+	python table_1_gen.py `ls $(INPUTDIR)/$(REFNAME)/*cluster$*.gbk` $(TABLEDIR)/$(REFNAME)_$*
 	# python category_gen.py PAL_001
 	python category_gen.py $(TABLEDIR)/$(REFNAME)_$*
 	# C. Extending table_1 with best hits
@@ -59,14 +58,14 @@ $(TABLEDIR)/$(REFNAME)_%_table2_1.csv: $(TABLEDIR)/$(REFNAME)_%.gbk
 	# D. Creating distance matrixes and running DBScan for subcluster divisions (table 2):
 	cd $(TABLEDIR); python $(SRC)/subcluster_gen.py $(REFNAME)_$*
 
-$(ClustersDatabase):
-	# Update BioCompass if required
-	cd ../; \
-	python setup.py install
+$(ClustersDatabase)/MIBiG:
+	mkdir -p $@
+	BioCompass download-MIBiG --outputdir $@
 
+$(ClustersDatabase): $(ClustersDatabase)/MIBiG
 	mkdir -p $@
 	for file in $(CLUSTER_LIST); \
-		do BioCompass --outputdir $@ $$file; \
+		do BioCompass download-hits --outputdir $@ $$file; \
 		done
 
 $(TABLEDIR)/$(REFNAME)_db: $(ClustersDatabase)

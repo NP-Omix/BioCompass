@@ -3,15 +3,21 @@ BioCompass
 ====================
 
 
-.. image:: https://img.shields.io/pypi/v/gene_cluster_network.svg
-        :target: https://pypi.python.org/pypi/gene_cluster_network
+.. image:: https://img.shields.io/pypi/v/BioCompass.svg
+        :target: https://pypi.python.org/pypi/BioCompass
 
-.. image:: https://img.shields.io/travis/castelao/gene_cluster_network.svg
-        :target: https://travis-ci.org/castelao/gene_cluster_network
+.. image:: https://img.shields.io/travis/castelao/BioCompass.svg
+        :target: https://travis-ci.org/castelao/BioCompass
 
-.. image:: https://readthedocs.org/projects/gene-cluster-network/badge/?version=latest
-        :target: https://gene-cluster-network.readthedocs.io/en/latest/?badge=latest
+.. image:: https://readthedocs.org/projects/biocompass/badge/?version=latest
+        :target: https://biocompass.readthedocs.io/en/latest/?badge=latest
         :alt: Documentation Status
+
+.. image:: https://img.shields.io/travis/castelao/BioCompass.svg
+        :target: https://travis-ci.org/castelao/BioCompass
+
+.. image:: https://codecov.io/gh/castelao/BioCompass/branch/master/graph/badge.svg
+        :target: https://codecov.io/gh/castelao/BioCompass
 
 
 Python package for gene clustering
