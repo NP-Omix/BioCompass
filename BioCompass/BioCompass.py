@@ -153,6 +153,28 @@ def parse_antiSMASH(content):
     return output
 
 
+def antiSMASH_to_dataFrame(content):
+    """ Extract an antiSMASH file as a pandas.DataFrame
+    """
+    parsed = parse_antiSMASH(content)
+    output = pd.DataFrame()
+    for cs in parsed['SignificantHits']:
+        clusterSubject = parsed['SignificantHits'][cs].copy()
+        df = pd.merge(
+                pd.DataFrame(clusterSubject['BlastHit']),
+                pd.DataFrame(clusterSubject['TableGenes']),
+                on='subject_gene', how='outer')
+
+        del(clusterSubject['BlastHit'])
+        del(clusterSubject['TableGenes'])
+
+        for v in clusterSubject:
+            df[v] = clusterSubject[v]
+        output = output.append(df, ignore_index=True)
+
+    return output
+
+
 class antiSMASH_file(object):
     """ A class to handle antiSMASH file output.
     """
