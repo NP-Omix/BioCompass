@@ -233,32 +233,32 @@ def download_hits(filename, output_path):
     """
     c = antiSMASH_file(filename)
 
-    for hit in c['SignificantHits'].keys():
-        for cluster in c['SignificantHits'][hit]:
-            table_genes = c['SignificantHits'][hit][cluster]['TableGenes']
+    for cs in c['SignificantHits'].keys():
+        locus = c['SignificantHits'][cs]['locus']
+        table_genes = c['SignificantHits'][cs]['TableGenes']
 
-            filename_out = os.path.join(
-                    output_path,
-                    "%s_%s_%s-%s.gbk" % (hit, cluster,
-                        min(table_genes['location_start']),
-                        max(table_genes['location_end'])))
+        filename_out = os.path.join(
+                output_path,
+                "%s_%s-%s.gbk" % (locus,
+                    min(table_genes['location_start']),
+                    max(table_genes['location_end'])))
 
-            if os.path.isfile(filename_out):
-                print "Already downloaded %s" % filename_out
-            else:
-                print "Requesting hit: %s, start: %s, end: %s" % (
-                        hit,
-                        min(table_genes['location_start']),
-                        max(table_genes['location_end']))
+        if os.path.isfile(filename_out):
+            print "Already downloaded %s" % filename_out
+        else:
+            print "Requesting cluster_subject: %s, start: %s, end: %s" % (
+                    locus,
+                    min(table_genes['location_start']),
+                    max(table_genes['location_end']))
 
-                content = efetch_hit(
-                    term=hit,
-                    seq_start=min(table_genes['location_start']),
-                    seq_stop=max(table_genes['location_end']))
+            content = efetch_hit(
+                term=locus,
+                seq_start=min(table_genes['location_start']),
+                seq_stop=max(table_genes['location_end']))
 
-                print "Saving %s" % filename_out
-                with open(filename_out, 'w') as f:
-                    f.write(content)
+            print "Saving %s" % filename_out
+            with open(filename_out, 'w') as f:
+                f.write(content)
 
 
 import urlparse
