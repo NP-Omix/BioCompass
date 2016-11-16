@@ -265,6 +265,7 @@ import urlparse
 import urllib2
 import tempfile
 import tarfile
+import os
 def download_mibig(outputdir, version='1.3'):
     """ Download and extract MIBiG files into outputdir
     """
@@ -283,6 +284,9 @@ def download_mibig(outputdir, version='1.3'):
         tar.extractall(path=outputdir)
         tar.close()
 
+    # MIBiG was packed with strange files ._*gbk. Let's remove it
+    for f in [f for f in os.listdir(outputdir) if f[:2] == '._']:
+        os.remove(os.path.join(outputdir, f))
 
 #def gbk2tablegen(gb_file, strain_id=None):
 #def cds_from_gbk(gb_file, strain_id=None):
