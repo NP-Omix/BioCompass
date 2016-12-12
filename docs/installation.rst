@@ -19,6 +19,8 @@ This is the preferred method to install BioCompass, as it will always install th
 If you don't have `pip`_ installed, this `Python installation guide`_ can guide
 you through the process.
 
+If you install BioCompass from pip, you still need a copy of the source (instructions below) to be able to run it.
+
 .. _pip: https://pip.pypa.io
 .. _Python installation guide: http://docs.python-guide.org/en/latest/starting/installation/
 
