@@ -15,12 +15,12 @@ A. Submit your query genome to `antiSMASH <http://antismash.secondarymetabolites
 
 B. Download and decompress multigeneBLAST for command line;
 
-	For linux::
+For linux::
 
 	wget 'http://downloads.sourceforge.net/project/multigeneblast/multigeneblast_1.1.13_linux64.tar.gz'
 	tar -xvzf multigeneblast_1.1.13_linux64.tar.gz
 
-	For mac:
+For mac::
 
 	wget 'https://superb-sea2.dl.sourceforge.net/project/multigeneblast/multigeneblast_1.1.14_macosx_commandline.zip'
 
@@ -29,12 +29,14 @@ B. Download and decompress multigeneBLAST for command line;
 C. Now, execute BioCompass using the following comand::
 
     cd path/to/BioCompass/BioCompass
-    make INPUTDIR='path/to/antiSMASH_input' REFNAME='NAME' MULTIGENEBLASTDIR='path/to/multigeneblast' ALL
+    make INPUTDIR='path/to/antiSMASH_input' REFNAME='NAME' \
+    	MULTIGENEBLASTDIR='path/to/multigeneblast' ALL
     
 
 D. Towards the end of the run, three questions will be prompted asking to select the cutoff you would like to use for filtering your results. We advise using a low cutoff first (near the minimum), checking the network diagram and then revisiting this step using the code below (that only reruns this step, not the whole pipeline) to find the best cutoff for your data::
     
-    make INPUTDIR='path/to/antiSMASH_input' REFNAME='NAME' MULTIGENEBLASTDIR='path/to/multigeneblast' step_H
+    make INPUTDIR='path/to/antiSMASH_input' REFNAME='NAME' \
+    	MULTIGENEBLASTDIR='path/to/multigeneblast' step_H
 
 
 E. The table outputs (REFNAME_edges.txt and REFNAME_nodes.txt) can be visualized as a network diagram using `Cytoscape 3.2.1 <http://www.cytoscape.org/download.php>`_.
