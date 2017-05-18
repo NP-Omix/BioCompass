@@ -9,9 +9,9 @@ edges_final = pd.read_csv('%s_edges_best_itineration.txt'%strain_name, sep='\t')
 
 while True:
     try:
-        per_genes = int(input("\n What minimum percentage of matching genes would you like [from 0 to 100]? "))
-        blast_score = int(input("\n What minimum cumulative BLAST score would you like [from %s to %s]? "%(edges_final.BLAST_score.min(),edges_final.BLAST_score.max())))
-        mgb_score = int(input("\n What minimum multigeneBLAST score [from %s to %s]? "%(edges_final.MultiGeneBlast_score.min(),edges_final.MultiGeneBlast_score.max())))
+        per_genes = int(raw_input("\n What minimum percentage of matching genes would you like [from 0 to 100]? "))
+        blast_score = int(raw_input("\n What minimum cumulative BLAST score would you like [from %s to %s]? "%(edges_final.BLAST_score.min(),edges_final.BLAST_score.max())))
+        mgb_score = int(raw_input("\n What minimum multigeneBLAST score [from %s to %s]? "%(edges_final.MultiGeneBlast_score.min(),edges_final.MultiGeneBlast_score.max())))
         break
     except ValueError:
         print("Sorry, I didn't understand that. Try again using INTERGERS ONLY.")
@@ -40,7 +40,7 @@ for index,row in edges_final.iterrows():
 edges_final = edges_final.drop(edges_final.index[indexes_to_drop])
             
 while True:
-    self_loop = input("\n Would you like to include subclusters with no matches?[Yes or No only!] ")
+    self_loop = raw_input("\n Would you like to include subclusters with no matches?[Yes or No only!] ")
     if self_loop == "Yes" or self_loop == "yes":
         edges_final.MultiGeneBlast_score.replace(to_replace='NaN', value=mgb_score, inplace=True)
         edges_final.BLAST_score.replace(to_replace='NaN', value=blast_score, inplace=True)
