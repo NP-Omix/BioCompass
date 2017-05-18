@@ -21,7 +21,7 @@ col9 = []
 for index, row in table2_df.iterrows():
     file_name = './%s_%s_%s/clusterblast_output.txt'%(table2_df.BGC.loc[index],itineration,table2_df.subcluster.loc[index])
     if os.path.isfile(file_name):
-        with open(file_name) as f:
+        with open(file_name).xreadlines() as f:
             for line in f:
                 hit = re.search(r'^(\d*). (\S*)_(\S*)$',line)
                 matching_genes = re.search(r'^Number of proteins with BLAST hits to this cluster: (\d*)$', line)

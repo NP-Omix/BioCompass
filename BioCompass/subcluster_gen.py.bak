@@ -67,7 +67,7 @@ def parse_db(db):
     D = defaultdict(list)
     for i,item in enumerate(db):
         D[item].append(i)
-    D = {k:v for k,v in list(D.items()) if len(v)>1}
+    D = {k:v for k,v in D.items() if len(v)>1}
     return D
 
 def find_category(categories,col5):
@@ -97,9 +97,9 @@ for itn in range(1,len(A)):
         col3 = []
         col4 = []
         col5 = []
-        for key, value in subcluster_dict.items():
+        for key, value in subcluster_dict.iteritems():
             col1.append(strain_name)
-            col2.append(string.ascii_uppercase[list(subcluster_dict.keys()).index(key)])
+            col2.append(string.ascii_uppercase[subcluster_dict.keys().index(key)])
             col3.append(len(value))
             categories = []
             genes = []
